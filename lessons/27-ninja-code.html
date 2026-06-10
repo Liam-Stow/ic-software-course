@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>27 · Ninja Code: going further — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="27">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 7 · Going further</div>
+    <h1>Ninja Code: going further</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 7</span>
+      <span class="pill time">~10 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll know <strong>what to learn next</strong> and exactly where to find it — the big topics that turn a working robot into a competitive one.</p></div>
+  </div>
+
+  <p class="lead">You've built subsystems, commands, PID control, simulations and automated
+  sequences — the core of FRC programming. The topics below are very common but beyond the
+  scope of this guide. Each has links to dive deeper, and <strong>self-research is part of
+  the challenge</strong>. Importantly, plenty of the IC Software team know these well and
+  can teach you one-on-one — ask.</p>
+
+  <div class="box concept">
+    <div class="box-title">🛞 Making a swerve drive base</div>
+    <p>Swerve lets the robot drive in any direction while facing any way — the standard for
+    competitive FRC. It's a big step up: many motors, modules, and odometry.</p>
+    <ul>
+      <li><a href="https://github.com/wpilibsuite/allwpilib/tree/main/wpilibcExamples/src/main/cpp/examples/SwerveDrivePoseEstimator" target="_blank" rel="noopener">WPILib SwerveDrivePoseEstimator example (C++) ↗</a></li>
+      <li><a href="https://github.com/icrobotics-team5584/FRC-2024-GAUSS/blob/main/src/main/include/subsystems/SubDrivebase.h" target="_blank" rel="noopener">IC 2024 GAUSS — SubDrivebase.h ↗</a></li>
+      <li><a href="https://github.com/icrobotics-team5584/FRC-2024-GAUSS/blob/main/src/main/cpp/subsystems/SubDrivebase.cpp" target="_blank" rel="noopener">IC 2024 GAUSS — SubDrivebase.cpp ↗</a></li>
+      <li><a href="https://github.com/icrobotics-team5584/FRC-2024-GAUSS/blob/main/src/main/include/utilities/SwerveModule.h" target="_blank" rel="noopener">IC 2024 GAUSS — SwerveModule.h ↗</a></li>
+      <li><a href="https://github.com/icrobotics-team5584/FRC-2024-GAUSS/blob/main/src/main/cpp/utilities/SwerveModule.cpp" target="_blank" rel="noopener">IC 2024 GAUSS — SwerveModule.cpp ↗</a></li>
+    </ul>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">📍 Knowing where you are on the field</div>
+    <p>Field localisation (pose estimation) makes it possible to aim at and drive to
+    arbitrary points — invaluable in both autonomous and teleop.</p>
+    <ul>
+      <li><a href="https://github.com/wpilibsuite/allwpilib/tree/main/wpilibcExamples/src/main/cpp/examples/SwerveDrivePoseEstimator" target="_blank" rel="noopener">WPILib pose-estimator example ↗</a></li>
+      <li><a href="https://docs.photonvision.org/en/latest/docs/examples/poseest.html" target="_blank" rel="noopener">PhotonVision — adding vision measurements ↗</a></li>
+    </ul>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">🤖 Autonomous</div>
+    <p>The first 15 seconds of every match run with no driver. Good autonomous routines win
+    games.</p>
+    <ul>
+      <li><a href="https://youtu.be/0Xi9yb1IMyA" target="_blank" rel="noopener">Zero to Autonomous YouTube series ↗</a> (Java, but the theory carries to C++)</li>
+      <li><a href="https://pathplanner.dev/home.html" target="_blank" rel="noopener">PathPlanner ↗</a> — the tool IC uses to generate autonomous paths</li>
+    </ul>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">🎛️ WPILib advanced controls</div>
+    <p>Once PIDF feels comfortable, there's a whole world of state-space control, motion
+    profiling and feedforward modelling.</p>
+    <ul>
+      <li><a href="https://docs.wpilib.org/en/stable/docs/software/advanced-controls/index.html" target="_blank" rel="noopener">Advanced Controls — WPILib documentation ↗</a></li>
+    </ul>
+  </div>
+
+  <div class="box simcheck">
+    <div class="box-title">🎉 You finished the course</div>
+    <p>You went from installing WPILib to automating a shooter, turret, feeder and climber in
+    simulation. That's a real, working command-based robot program. The next step is a real
+    robot — bring these skills to the team and keep building.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What's the best move when a Ninja Code topic gets hard?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Research the linked docs and ask the IC Software team — many of them know these topics well</button>
+      <button class="opt" data-correct="false">Give up; these topics aren't learnable</button>
+      <button class="opt" data-correct="false">Avoid the examples and guess</button>
+    </div>
+    <div class="explain ok">These are advanced but very learnable. The linked resources plus one-on-one help from experienced teammates are exactly how people pick them up.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="26-task-climber.html"><span class="dir">← Previous</span><span class="ttl">Task: build a climber</span></a>
+    <a class="next" href="../index.html"><span class="dir">Done →</span><span class="ttl">Back to the course hub</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

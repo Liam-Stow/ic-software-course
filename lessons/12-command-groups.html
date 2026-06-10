@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12 · Composing commands — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="12">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 2 · Writing cleaner code</div>
+    <h1>Composing commands</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 2</span>
+      <span class="pill time">~15 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>One button will <strong>spin the flywheel, wait a second for it to get up to speed, then feed</strong> — all as a single combined command.</p></div>
+  </div>
+
+  <p class="lead">A flywheel needs a moment to reach full speed before you feed a ball
+  into it — feed too early and the shot is weak. So instead of two separate buttons,
+  let's combine the actions: spin up, pause, then feed, automatically.</p>
+
+  <div class="box concept">
+    <div class="box-title">Commands are composable</div>
+    <p>The real power of commands is that you can <strong>glue them together</strong> into
+    bigger commands. Two of the glue functions:</p>
+    <ul>
+      <li><span class="inline">.AlongWith(...)</span> — run another command
+      <strong>at the same time</strong> (in parallel).</li>
+      <li><span class="inline">.AndThen(...)</span> — run another command
+      <strong>afterwards</strong> (in sequence).</li>
+    </ul>
+  </div>
+
+  <h2>Build the composition</h2>
+  <p>In <strong>RobotContainer.cpp</strong>, replace the A-button binding with this. Make
+  sure <span class="inline">#include &lt;frc2/command/Commands.h&gt;</span> is near the top
+  (the template usually adds it for you):</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/RobotContainer.cpp">
+<code>
+void RobotContainer::ConfigureBindings() {
+  _controller.A().WhileTrue(
+      SubShooter::GetInstance().SpinFlywheel()
+          .AlongWith(
+              frc2::cmd::Wait(1_s)
+                  .AndThen(SubFeeder::GetInstance().Feed())));
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Reading it out loud</div>
+    <p>"While A is held: <strong>spin the flywheel</strong>, and <em>along with that</em>,
+    <strong>wait 1 second</strong> and <em>then</em> <strong>feed</strong>."</p>
+    <p>The flywheel starts immediately and keeps spinning. In parallel, a one-second
+    timer runs; once it finishes, the feeder kicks in — by which point the wheel is up
+    to speed. 🎯</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title"><code class="inline">frc2::cmd::Wait(1_s)</code></div>
+    <p><span class="inline">Wait</span> is a built-in command that simply waits for a set
+    time. The <span class="inline">1_s</span> is a <strong>unit</strong> — one second.
+    WPILib uses units like <span class="inline">_s</span>, <span class="inline">_ms</span>,
+    <span class="inline">_deg</span> and <span class="inline">_rpm</span> so the compiler
+    can catch mistakes like mixing up seconds and milliseconds. You'll see lots more of
+    these in Module 4.</p>
+  </div>
+
+  <div class="box simcheck">
+    <div class="box-title">Test it</div>
+    <ul class="checklist">
+      <li>Run the simulator and hold A.</li>
+      <li>The shooter speed jumps immediately.</li>
+      <li>After about a second, the feeder turns on too.</li>
+      <li>Release A and both stop.</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What's the difference between <code class="inline">.AlongWith()</code> and <code class="inline">.AndThen()</code>?</div>
+    <div class="options">
+      <button class="opt" data-correct="true"><code class="inline">.AlongWith()</code> runs in parallel; <code class="inline">.AndThen()</code> runs afterwards</button>
+      <button class="opt" data-correct="false">They're identical — just different spellings</button>
+      <button class="opt" data-correct="false"><code class="inline">.AlongWith()</code> is for motors, <code class="inline">.AndThen()</code> is for sensors</button>
+    </div>
+    <div class="explain ok"><code class="inline">.AlongWith()</code> = at the same time (parallel). <code class="inline">.AndThen()</code> = one after the other (sequence). Combining them lets you describe quite complex behaviour clearly.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why does the feeder wait a second before starting?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">To save battery</button>
+      <button class="opt" data-correct="true">To give the flywheel time to reach full speed before a ball is fed in</button>
+      <button class="opt" data-correct="false">Because commands can only start one second apart</button>
+    </div>
+    <div class="explain ok">Feeding a ball into a flywheel that hasn't spun up yet gives a weak, inaccurate shot. The wait lets the wheel reach speed first.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="11-task-feeder.html"><span class="dir">← Previous</span><span class="ttl">Task: add a feeder</span></a>
+    <a class="next" href="13-git-cloning.html"><span class="dir">Next →</span><span class="ttl">Git &amp; cloning the IC repo</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

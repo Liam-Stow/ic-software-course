@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 · Vendor libraries &amp; building — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="03">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 0 · Getting set up</div>
+    <h1>Vendor libraries &amp; building your code</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 0</span>
+      <span class="pill time">~10 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll have installed the <strong>RevLib</strong> vendor library and seen your code <strong>BUILD SUCCESSFUL</strong> for the first time.</p></div>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">What's a vendor library?</div>
+    <p>To control hardware like a motor, we usually need code that the hardware's
+    manufacturer provides. This is called a <strong>library</strong> or
+    <strong>dependency</strong>. For this course we'll install just one:
+    <strong>RevLib</strong>, from Rev Robotics. It lets us drive their Spark motor
+    controllers, which IC uses a lot.</p>
+  </div>
+
+  <h2>Install RevLib</h2>
+  <ol>
+    <li>In the VS Code sidebar, open the <strong>WPILib Vendor Dependencies</strong> tab.</li>
+    <li>Find <strong>REVLib</strong> in the list and install it with the blue button.</li>
+  </ol>
+
+  <h2>Build your code</h2>
+  <p>To check the install worked, we'll <strong>build</strong> the project. Building
+  converts your human-readable code into machine-readable instructions.</p>
+  <ol>
+    <li>Open VS Code's command palette with <span class="pill">Ctrl + Shift + P</span>.</li>
+    <li>Run the <span class="pill">WPILib: Build Robot Code</span> command.</li>
+  </ol>
+
+  <div class="box simcheck">
+    <div class="box-title">You're done when…</div>
+    <ul class="checklist">
+      <li>A terminal opens at the bottom of the screen and runs a build process.</li>
+      <li>It eventually prints <strong>BUILD SUCCESSFUL</strong> in green.</li>
+      <li>(This can take several minutes the first time — that's normal.)</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What does "building" your code actually do?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">Uploads it to a real robot over WiFi</button>
+      <button class="opt" data-correct="true">Converts your human-readable code into machine-readable instructions</button>
+      <button class="opt" data-correct="false">Deletes any code with mistakes in it</button>
+    </div>
+    <div class="explain ok">A build (also called compiling) translates the C++ you wrote into instructions a computer can run. If your code has certain mistakes, the build will <em>fail</em> and tell you where — a useful early warning system.</div>
+  </div>
+
+  <div class="box pitfall">
+    <div class="box-title">Build failed?</div>
+    <p>If you don't see BUILD SUCCESSFUL, read the red error text — it usually names
+    the file and line with the problem. The most common cause at this stage is the
+    Additional C++ install from Lesson 1 being skipped. Workshop mentors can help
+    if you're stuck.</p>
+  </div>
+
+  <p>That's the whole setup done. From here on, it's all about writing code. 🎉</p>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="02-create-project.html"><span class="dir">← Previous</span><span class="ttl">Creating your first project</span></a>
+    <a class="next" href="04-what-is-a-subsystem.html"><span class="dir">Next →</span><span class="ttl">What is a subsystem?</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

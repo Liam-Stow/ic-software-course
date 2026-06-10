@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13 · Git &amp; cloning the IC repo — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="13">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 3 · Working as a team</div>
+    <h1>Git &amp; cloning the IC repo</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 3</span>
+      <span class="pill time">~15 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll have <strong>Git</strong> installed and a copy of the team's real software project <strong>cloned</strong> to your computer.</p></div>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">What is Git?</div>
+    <p><strong>Git</strong> is software that saves a history of versions of your code, lets
+    the team share one project, and lets many people work on it in parallel without
+    overwriting each other. Every serious software team uses it — and so do we.</p>
+  </div>
+
+  <h2>Install Git</h2>
+  <p>Grab it from <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git-scm.com/downloads</a>.
+  The installer has a lot of options — just leave them all at their defaults and click through.</p>
+
+  <h2>Clone the IC project</h2>
+  <p>"Cloning" means downloading a full copy of a project, complete with its history.</p>
+  <ol>
+    <li>Go to the ICRobotics GitHub page and open the latest software project repository
+    (ask a mentor which one is current — e.g. the season's named project). If you don't
+    have access yet, make a GitHub account and ask the team to add you.</li>
+    <li>Click the green <strong>Code</strong> button and copy the <strong>HTTPS</strong> URL.</li>
+    <li>Open WPILib VS Code to a folder where you keep IC projects. We usually use
+    <span class="inline">C:\scm\icrobotics</span> (scm = "source code management"), but
+    anywhere is fine.</li>
+    <li>Open the command palette (<span class="pill">Ctrl + Shift + P</span>) and run
+    <span class="pill">Git: Clone</span>.</li>
+    <li>Paste the URL and press Enter.</li>
+  </ol>
+
+  <div class="box concept">
+    <div class="box-title">Why clone the real project?</div>
+    <p>The team's project already contains helper code and tooling we'll use for the
+    rest of the course (you'll copy some of it across in the next lesson). It's also how
+    you'll contribute to the actual robot once you're up to speed.</p>
+  </div>
+
+  <div class="resources">
+    <a class="pill" href="https://docs.github.com/en/get-started" target="_blank" rel="noopener">📘 New to GitHub? Start here →</a>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What does Git let a team do?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Save a history of code versions and let many people work on the same project in parallel</button>
+      <button class="opt" data-correct="false">Make robot code run twice as fast</button>
+      <button class="opt" data-correct="false">Replace the need for a motor controller</button>
+    </div>
+    <div class="explain ok">Git is version control: it tracks the history of your code and lets the whole team collaborate on one shared project without clobbering each other's work.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What does "cloning" a repository mean?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">Deleting the online copy</button>
+      <button class="opt" data-correct="true">Downloading a full local copy of the project, including its history</button>
+      <button class="opt" data-correct="false">Renaming the project</button>
+    </div>
+    <div class="explain ok">Cloning pulls down the whole repository — files plus version history — so you can build and edit it on your own machine.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="12-command-groups.html"><span class="dir">← Previous</span><span class="ttl">Composing commands</span></a>
+    <a class="next" href="14-utilities-ctre.html"><span class="dir">Next →</span><span class="ttl">Utilities &amp; CTRE Phoenix</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

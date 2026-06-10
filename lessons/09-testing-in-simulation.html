@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>9 · Testing in simulation — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="09">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 1 · Your first subsystem</div>
+    <h1>Testing in simulation</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 1</span>
+      <span class="pill time">~15 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll run your robot code in the <strong>Simulation GUI</strong> and watch the shooter's speed change when you press a button. Your first working robot behaviour!</p></div>
+  </div>
+
+  <p class="lead">The code so far is enough to run on a real robot. But there's one
+  thing we should add so we can <em>see</em> the shooter doing something in simulation:
+  report its speed to the dashboard.</p>
+
+  <h2>Send the speed to the dashboard</h2>
+  <p>In <strong>SubShooter.cpp</strong>, include SmartDashboard and add a line to the
+  <span class="inline">Periodic()</span> function:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubShooter.cpp">
+<code>
+#include "subsystems/SubShooter.h"
+#include &lt;frc/smartdashboard/SmartDashboard.h&gt;
+
+SubShooter::SubShooter() = default;
+
+// This method will be called once per scheduler run
+void SubShooter::Periodic() {
+  frc::SmartDashboard::PutNumber("shooter speed", _shooterMotor.Get());
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">What this line does</div>
+    <p><strong>SmartDashboard</strong> lets our robot send information back to a dashboard
+    a human can see. Here we put a number on the dashboard labelled
+    <span class="inline">"shooter speed"</span>, equal to
+    <span class="inline">_shooterMotor.Get()</span>.</p>
+    <p><span class="inline">.Get()</span> returns how much power is being sent to the
+    motor, from 0.0 (still) to 1.0 (full power). So at 80% power it reports 0.8. If the
+    motor were at 50%, this line would effectively be:</p>
+  </div>
+
+  <div class="codeblock type" data-lang="cpp" data-file="don't actually write this — just to show what's happening">
+<code>
+frc::SmartDashboard::PutNumber("shooter speed", 0.5);
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Periodic() runs constantly</div>
+    <p>A subsystem's <span class="inline">Periodic()</span> function is called
+    automatically about <strong>50 times a second</strong>. Putting the speed there means
+    the dashboard stays up to date as the real value changes.</p>
+  </div>
+
+  <h2>Run the simulator</h2>
+  <ol>
+    <li>Open the command palette: <span class="pill">Ctrl + Shift + P</span>.</li>
+    <li>Run <span class="pill">WPILib: Simulate Robot Code</span>.</li>
+    <li>When asked, tick <strong>Sim GUI</strong> and continue.</li>
+  </ol>
+
+  <div class="box project">
+    <div class="box-title">Drive the simulation</div>
+    <ol>
+      <li>In the Sim GUI, drag your keyboard/controller from <strong>System Joysticks</strong>
+      into the <strong>Joysticks</strong> panel (slot 0).</li>
+      <li>Set <strong>Robot State</strong> to <strong>Teleoperated</strong>.</li>
+      <li>Find <strong>shooter speed</strong> in the <em>SmartDashboard</em> or
+      <em>NetworkTables</em> panel.</li>
+      <li>Press the key mapped to the A button and watch the value jump to <strong>0.8</strong>;
+      release it and watch it fall back to <strong>0</strong>.</li>
+    </ol>
+  </div>
+
+  <div class="box simcheck">
+    <div class="box-title">Success looks like</div>
+    <ul class="checklist">
+      <li>"shooter speed" reads 0 at rest.</li>
+      <li>Holding A makes it read 0.8.</li>
+      <li>Releasing A returns it to 0.</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What does <code class="inline">_shooterMotor.Get()</code> return?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">The motor's temperature</button>
+      <button class="opt" data-correct="true">How much power is being sent to the motor (0.0 to 1.0)</button>
+      <button class="opt" data-correct="false">The CAN ID of the motor</button>
+    </div>
+    <div class="explain ok"><code class="inline">.Get()</code> returns the commanded power, from 0.0 (still) to 1.0 (full forward). That's why the dashboard shows 0.8 while you hold A.</div>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Bonus: graph it</div>
+    <p>You can right-click the "shooter speed" value in the Sim GUI and add it to a
+    graph to watch it change over time. We'll lean on graphs heavily when tuning the
+    flywheel in Module 4.</p>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="08-binding-buttons.html"><span class="dir">← Previous</span><span class="ttl">Binding commands to buttons</span></a>
+    <a class="next" href="10-constants-namespaces.html"><span class="dir">Next →</span><span class="ttl">Constants &amp; namespaces</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

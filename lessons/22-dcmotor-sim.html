@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>22 · Simulating position — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="22">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 5 · Position control: the turret</div>
+    <h1>Simulating position</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 5</span>
+      <span class="pill time">~15 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Your simulated turret will actually <strong>rotate to an angle and hold there</strong>, because you'll model its physics with a <strong>DCMotorSim</strong>.</p></div>
+  </div>
+
+  <p class="lead">The flywheel used a <span class="inline">FlywheelSim</span>, which only
+  tracks <strong>speed</strong>. A turret cares about <strong>where it's pointing</strong>,
+  not just how fast it's turning — so we need a sim that tracks <strong>position</strong>
+  too. That's the <span class="inline">DCMotorSim</span>.</p>
+
+  <h2>Add the simulation objects to the header</h2>
+  <p>In <strong>SubTurret.h</strong>, add these includes and simulation members, and declare
+  <span class="inline">SimulationPeriodic()</span>:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubTurret.h">
+<code>
+#include &lt;frc2/command/SubsystemBase.h&gt;
+#include &lt;frc2/command/Commands.h&gt;
+#include &lt;frc/simulation/DCMotorSim.h&gt;
+#include &lt;frc/system/plant/DCMotor.h&gt;
+#include &lt;frc/system/plant/LinearSystemId.h&gt;
+#include "utilities/ICSparkFlex.h"
+#include "Constants.h"
+</code>
+  </div>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubTurret.h">
+<code>
+  void Periodic() override;
+  void SimulationPeriodic() override;
+
+  frc2::CommandPtr TurnTo(units::degree_t angle);
+
+ private:
+  ICSparkFlex _turretMotor{canid::TURRET_MOTOR, 60_A};
+
+  // Constants
+  static constexpr double GEARING = 20;
+  static constexpr units::kilogram_square_meter_t MOI = 0.001_kg_sq_m;
+  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NeoVortex(1);
+
+  frc::LinearSystem&lt;2, 1, 2&gt; _turretSystem =
+      frc::LinearSystemId::DCMotorSystem(MOTOR_MODEL, MOI, GEARING);
+  frc::sim::DCMotorSim _turretSim{_turretSystem, MOTOR_MODEL};
+};
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title"><code class="inline">&lt;2, 1, 2&gt;</code> — why not <code class="inline">&lt;1, 1, 1&gt;</code>?</div>
+    <p>The flywheel system was <span class="inline">&lt;1, 1, 1&gt;</span>: one state (speed),
+    one input (voltage), one output (speed). A turret tracks <strong>two states</strong> —
+    its <em>position</em> and its <em>velocity</em> — so it's
+    <span class="inline">&lt;2, 1, 2&gt;</span>: two states, one input (voltage), two outputs
+    (position and velocity). That's the whole difference between simulating a spinning wheel
+    and an aiming mechanism.</p>
+  </div>
+
+  <h2>Run the simulation every loop</h2>
+  <p>In <strong>SubTurret.cpp</strong>, define <span class="inline">SimulationPeriodic()</span>.
+  It's the same three-step loop as the flywheel:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubTurret.cpp">
+<code>
+void SubTurret::SimulationPeriodic() {
+  _turretSim.SetInputVoltage(_turretMotor.CalcSimVoltage());
+  _turretSim.Update(20_ms);
+  _turretMotor.IterateSim(_turretSim.GetAngularVelocity());
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Same loop, richer sim</div>
+    <p>The code looks identical to the flywheel's <span class="inline">SimulationPeriodic()</span> —
+    voltage in, advance 20&nbsp;ms, speed back out. The difference is inside
+    <span class="inline">_turretSim</span>: because it's a DCMotorSim it also keeps track of
+    the accumulated <em>angle</em>, which is exactly what position control needs to know.</p>
+  </div>
+
+  <div class="box simcheck">
+    <div class="box-title">Test it</div>
+    <ul class="checklist">
+      <li>Bind <span class="inline">TurnTo(90_deg)</span> to a button in RobotContainer (we'll wire it properly soon).</li>
+      <li>Simulate and graph the turret's <strong>target position</strong> and <strong>actual position</strong>.</li>
+      <li>Press the button: the actual angle should rise and settle on 90°. The gear ratio from last lesson means it lands on real turret degrees, not motor turns.</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why does the turret use <code class="inline">DCMotorSim</code> instead of <code class="inline">FlywheelSim</code>?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">DCMotorSim tracks position (and velocity); FlywheelSim only tracks velocity</button>
+      <button class="opt" data-correct="false">DCMotorSim is faster to compute</button>
+      <button class="opt" data-correct="false">FlywheelSim doesn't work with the Spark Flex</button>
+    </div>
+    <div class="explain ok">Position control needs to know the angle, so we need a sim that integrates velocity into position. That's the DCMotorSim.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What do the three numbers in <code class="inline">LinearSystem&lt;2, 1, 2&gt;</code> mean?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Two states (position + velocity), one input (voltage), two outputs</button>
+      <button class="opt" data-correct="false">Two motors, one gearbox, two encoders</button>
+      <button class="opt" data-correct="false">A 2:1 then 2:1 gear reduction</button>
+    </div>
+    <div class="explain ok">States, inputs, outputs. The turret has two states because it tracks both where it is and how fast it's moving.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="21-gear-ratios.html"><span class="dir">← Previous</span><span class="ttl">Gear ratios &amp; conversion factors</span></a>
+    <a class="next" href="23-on-target-bools.html"><span class="dir">Next →</span><span class="ttl">Checking when you're on target</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

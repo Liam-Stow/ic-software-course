@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>21 · Gear ratios &amp; conversion factors — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="21">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 5 · Position control: the turret</div>
+    <h1>Gear ratios &amp; conversion factors</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 5</span>
+      <span class="pill time">~15 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll command the turret in <strong>real degrees</strong> by teaching the Spark about the gearbox between the motor and the turret.</p></div>
+  </div>
+
+  <p class="lead">The turret motor doesn't drive the turret directly — it goes through a
+  <strong>gearbox</strong> first, to make it stronger and slower. We'll use a gear ratio of
+  <strong>20:1</strong>: the motor spins 20 times for every 1 turn of the turret.</p>
+
+  <h2>Note the gear ratio</h2>
+  <p>Add a <span class="inline">GEARING</span> constant to the turret's private section in
+  <strong>SubTurret.h</strong>:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubTurret.h">
+<code>
+ private:
+  ICSparkFlex _turretMotor{canid::TURRET_MOTOR, 60_A};
+
+  // Constants
+  static constexpr double GEARING = 20;
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Two ways to handle the gearbox</div>
+    <p>We need to convert turret degrees into motor revolutions.</p>
+    <ul>
+      <li><strong>Option 1:</strong> multiply by the ratio every time you set a target
+      (<span class="inline">angle * GEARING</span>). Easy to forget somewhere.</li>
+      <li><strong>Option 2 (we'll use this):</strong> tell the Spark a
+      <strong>conversion factor</strong> once, and it does the maths automatically forever
+      after. Cleaner and harder to get wrong.</li>
+    </ul>
+  </div>
+
+  <h2>Set the conversion factor in the constructor</h2>
+  <p>In <strong>SubTurret.cpp</strong>, configure the encoder's conversion factors. We also
+  set the PID gains here while we're at it:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubTurret.cpp">
+<code>
+SubTurret::SubTurret() {
+  rev::spark::SparkBaseConfig config;
+  config.encoder.PositionConversionFactor(1.0 / GEARING);
+  config.encoder.VelocityConversionFactor(1.0 / GEARING / 60.0);
+  config.closedLoop.P(0.1);
+  config.closedLoop.D(0.1);
+  _turretMotor.AdjustConfig(config);
+
+  frc::SmartDashboard::PutData("Turret motor", &amp;_turretMotor);
+}
+</code>
+  </div>
+
+  <p>Now <span class="inline">TurnTo</span> from last lesson stays simple — no
+  multiplication needed, because the Spark converts behind the scenes:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubTurret.cpp">
+<code>
+frc2::CommandPtr SubTurret::TurnTo(units::degree_t angle) {
+  return Run([this, angle] {
+    _turretMotor.SetPositionTarget(angle);
+  });
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Why <code class="inline">1.0 / GEARING</code>, not <code class="inline">GEARING</code>?</div>
+    <p>The Spark Max expects its conversion factor as <em>input gear teeth ÷ output gear
+    teeth</em>, while WPILib's simulation objects expect <em>output ÷ input</em> — the
+    inverse. So one of them has to be flipped. We invert here with
+    <span class="inline">1.0 / GEARING</span>. (The velocity factor also divides by 60 to
+    convert per-minute into per-second.)</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">P = 0.1, D = 0.1</div>
+    <p>For position control a little <strong>D</strong> helps damp the motion so the turret
+    doesn't overshoot and wobble. With no feedforward gains set, this is effectively a
+    feedback-only controller — fine for a turret. You'll tune these live in the next lesson.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What's the advantage of a conversion factor over multiplying by the ratio each time?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">You set it once and the Spark applies it everywhere automatically — less to forget</button>
+      <button class="opt" data-correct="false">It makes the turret move faster</button>
+      <button class="opt" data-correct="false">It removes the need for a gearbox</button>
+    </div>
+    <div class="explain ok">Set the factor once in the constructor and every target/reading is converted automatically. Manual multiplication has to be repeated everywhere and is easy to miss.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> With a 20:1 ratio, how many motor turns make one full turret rotation?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">1</button>
+      <button class="opt" data-correct="true">20</button>
+      <button class="opt" data-correct="false">60</button>
+    </div>
+    <div class="explain ok">20:1 means the motor spins 20 times for each single rotation of the turret — that's what makes it stronger and slower.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="20-turret-parameterized-commands.html"><span class="dir">← Previous</span><span class="ttl">Commands with inputs</span></a>
+    <a class="next" href="22-dcmotor-sim.html"><span class="dir">Next →</span><span class="ttl">Simulating position</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>24 · The command lifecycle — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="24">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 6 · Automating the robot</div>
+    <h1>The command lifecycle</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 6</span>
+      <span class="pill time">~12 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll understand the <strong>three stages every command goes through</strong> — Initialize, Execute and End — which is the key to building more complex actions.</p></div>
+  </div>
+
+  <p class="lead">Commands are robot actions that run <strong>over time</strong>. So far
+  we've treated them as black boxes, but to automate the robot we need to understand what's
+  happening inside. Every command has a <strong>start, a middle, and an end</strong>.</p>
+
+  <div class="box concept">
+    <div class="box-title">The three stages</div>
+    <p>More formally, those stages are called <strong>Initialize</strong>,
+    <strong>Execute</strong>, and <strong>End</strong>:</p>
+    <ol>
+      <li><strong>Initialize</strong> runs <strong>once</strong>, the moment the command
+      starts.</li>
+      <li><strong>Execute</strong> runs <strong>in a loop</strong>, over and over (every
+      20&nbsp;ms), for as long as the command is active.</li>
+      <li><strong>End</strong> runs <strong>once</strong>, when the command stops — whether
+      it finished on its own or was interrupted.</li>
+    </ol>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">You've already used these</div>
+    <p>Remember <span class="inline">StartEnd</span> back in the shooter? The name says it
+    all: the first block was the <strong>start</strong> (Initialize) and the second was the
+    <strong>end</strong> (End). And <span class="inline">Run</span> from the turret? That
+    block was the <strong>Execute</strong> stage — the bit that repeats. The command
+    factories are just convenient shortcuts for filling in these three stages.</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Factories &amp; decorators</div>
+    <p>WPILib provides a big toolbox of <strong>factories</strong> (which build common kinds
+    of commands) and <strong>decorators</strong> (which change how a command behaves).
+    Knowing what's in that toolbox lets you build complex actions simply. We've met
+    <span class="inline">StartEnd</span>, <span class="inline">Run</span>,
+    <span class="inline">Wait</span>, <span class="inline">AlongWith</span> and
+    <span class="inline">AndThen</span>. Next we'll add <span class="inline">Parallel</span>,
+    <span class="inline">Sequence</span> and <span class="inline">WaitUntil</span>.</p>
+    <p><a href="https://docs.wpilib.org/en/stable/docs/software/commandbased/index.html" target="_blank" rel="noopener">WPILib command-based docs ↗</a> ·
+    <a href="https://docs.wpilib.org/en/stable/docs/software/commandbased/command-compositions.html" target="_blank" rel="noopener">Full factory &amp; decorator list ↗</a></p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Which stage runs over and over in a loop while the command is active?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">Initialize</button>
+      <button class="opt" data-correct="true">Execute</button>
+      <button class="opt" data-correct="false">End</button>
+    </div>
+    <div class="explain ok">Execute is the repeating middle stage — it runs every 20 ms for as long as the command keeps running. Initialize and End each run exactly once.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> When does the End stage run?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Once, when the command stops — whether it finished naturally or was interrupted</button>
+      <button class="opt" data-correct="false">Every 20 ms alongside Execute</button>
+      <button class="opt" data-correct="false">Never, unless you call it manually</button>
+    </div>
+    <div class="explain ok">End runs a single time when the command is done. It's where StartEnd put its cleanup block — like setting the motor back to 0.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="23-on-target-bools.html"><span class="dir">← Previous</span><span class="ttl">Checking when you're on target</span></a>
+    <a class="next" href="25-command-automation.html"><span class="dir">Next →</span><span class="ttl">Command automation</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

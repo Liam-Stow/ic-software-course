@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11 · Task: add a feeder — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="11">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 2 · Writing cleaner code</div>
+    <h1>Task: add a feeder subsystem</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 2</span>
+      <span class="pill time">~25 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>Your mission</h2><p>Build a <strong>feeder</strong> subsystem entirely on your own, the same way we built the shooter. No new concepts — this is practice.</p></div>
+  </div>
+
+  <p class="lead">A shooter needs something to push balls into the spinning flywheel.
+  That's the <strong>feeder</strong>: a small wheel above the projectiles that rotates to
+  push them up into the flywheel, firing them out.</p>
+
+  <div class="box task">
+    <div class="box-title">The brief</div>
+    <p>Make a new subsystem for the feeder. It should:</p>
+    <ul class="checklist">
+      <li>Be called <strong>SubFeeder</strong>, in the subsystems folders.</li>
+      <li>Have a <strong>Spark Flex</strong> motor controller (give it a new CAN ID).</li>
+      <li>Have a command — call it <strong>Feed()</strong> — that runs the motor while held.</li>
+      <li>Be a Singleton (add <span class="inline">GetInstance()</span>).</li>
+      <li>Be bound to a <strong>different button</strong> (try the B button) in RobotContainer.</li>
+    </ul>
+    <p><strong>Test it in the simulator when it's ready.</strong></p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Where to look if you're stuck</div>
+    <p>Everything you need is in Lessons 4–10. The feeder is built exactly like the
+    shooter — just swap the names. Add a <span class="inline">FEEDER_MOTOR</span> constant
+    to Constants.h alongside the shooter one.</p>
+  </div>
+
+  <p>Genuinely try it before peeking. Getting stuck and working through it is where the
+  learning happens.</p>
+
+  <details class="reveal">
+    <summary>Show the solution <span class="hint">— try it yourself first!</span></summary>
+    <div class="reveal-body">
+
+      <h3>Constants.h</h3>
+      <div class="codeblock type" data-lang="cpp" data-file="src/main/include/Constants.h">
+<code>
+#pragma once
+
+namespace canid {
+  constexpr int SHOOTER_MOTOR = 1;
+  constexpr int FEEDER_MOTOR  = 2;
+}
+</code>
+      </div>
+
+      <h3>SubFeeder.h</h3>
+      <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubFeeder.h">
+<code>
+#pragma once
+
+#include &lt;frc2/command/SubsystemBase.h&gt;
+#include &lt;rev/SparkFlex.h&gt;
+#include "Constants.h"
+
+class SubFeeder : public frc2::SubsystemBase {
+ public:
+  static SubFeeder&amp; GetInstance() {
+    static SubFeeder inst;
+    return inst;
+  }
+
+  SubFeeder();
+
+  void Periodic() override;
+
+  frc2::CommandPtr Feed();
+
+ private:
+  rev::spark::SparkFlex _feederMotor{
+      canid::FEEDER_MOTOR, rev::spark::SparkLowLevel::MotorType::kBrushless};
+};
+</code>
+      </div>
+
+      <h3>SubFeeder.cpp</h3>
+      <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubFeeder.cpp">
+<code>
+#include "subsystems/SubFeeder.h"
+
+SubFeeder::SubFeeder() = default;
+
+// This method will be called once per scheduler run
+void SubFeeder::Periodic() {}
+
+frc2::CommandPtr SubFeeder::Feed() {
+  return StartEnd(
+      [this] {
+        _feederMotor.Set(1);  // On Start
+      },
+      [this] {
+        _feederMotor.Set(0);  // On End
+      });
+}
+</code>
+      </div>
+
+      <h3>RobotContainer.cpp — bind to the B button</h3>
+      <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/RobotContainer.cpp">
+<code>
+#include "subsystems/SubFeeder.h"
+
+void RobotContainer::ConfigureBindings() {
+  _controller.A().WhileTrue(SubShooter::GetInstance().SpinFlywheel());
+  _controller.B().WhileTrue(SubFeeder::GetInstance().Feed());
+}
+</code>
+      </div>
+
+      <p>Run the simulator and confirm the B button runs your feeder. If it does — great
+      work, you just built a subsystem from scratch.</p>
+    </div>
+  </details>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why must the feeder use a different CAN ID from the shooter?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Every device on the CAN bus needs a unique address so the code talks to the right one</button>
+      <button class="opt" data-correct="false">Because feeders only work on even-numbered IDs</button>
+      <button class="opt" data-correct="false">It doesn't matter — they can share an ID</button>
+    </div>
+    <div class="explain ok">Two devices sharing a CAN ID would be ambiguous — the code wouldn't know which one you mean. Each motor controller needs its own ID.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="10-constants-namespaces.html"><span class="dir">← Previous</span><span class="ttl">Constants &amp; namespaces</span></a>
+    <a class="next" href="12-command-groups.html"><span class="dir">Next →</span><span class="ttl">Composing commands</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

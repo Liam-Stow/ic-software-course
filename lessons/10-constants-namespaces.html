@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10 · Constants &amp; namespaces — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="10">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 2 · Writing cleaner code</div>
+    <h1>Constants &amp; namespaces</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 2</span>
+      <span class="pill time">~12 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Your CAN IDs will live in one tidy <strong>Constants.h</strong> file, referenced by name instead of by mystery numbers.</p></div>
+  </div>
+
+  <p class="lead">Right now the shooter's CAN ID is a bare <span class="inline">1</span>
+  buried in SubShooter.h. As the robot grows we'll have many IDs, and hunting through
+  files for them gets painful. Let's gather them in one place.</p>
+
+  <h2>Create Constants.h</h2>
+  <p>Inside <span class="pill">src/main/include</span> there is already a
+  <strong>Constants.h</strong> file (the template made one). Open it and add a constant
+  for the shooter motor:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/Constants.h">
+<code>
+#pragma once
+
+namespace canid {
+  constexpr int SHOOTER_MOTOR = 1;
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Three new ideas, briefly</div>
+    <ul>
+      <li><strong>constexpr</strong> — like <span class="inline">int</span> but the value
+      can never change while the program runs. Perfect for things that are fixed, like a
+      CAN ID. (We use <span class="inline">constexpr</span> instead of the more common
+      <span class="inline">const</span> mostly out of habit; both work here.)</li>
+      <li><strong>ALL_CAPS</strong> — the naming convention for constants, so they stand
+      out from normal variables.</li>
+      <li><strong>namespace</strong> — a labelled group. Putting the ID inside a
+      <span class="inline">canid</span> namespace lets us refer to it as
+      <span class="inline">canid::SHOOTER_MOTOR</span>, which reads clearly and avoids
+      name clashes.</li>
+    </ul>
+  </div>
+
+  <h2>Use the constant</h2>
+  <p>Back in <strong>SubShooter.h</strong>, include Constants.h and swap the bare
+  <span class="inline">1</span> for the named constant:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+#include "Constants.h"
+</code>
+  </div>
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+  rev::spark::SparkFlex _shooterMotor{
+      canid::SHOOTER_MOTOR, rev::spark::SparkLowLevel::MotorType::kBrushless};
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Why this is better</div>
+    <p>Now <span class="inline">canid::SHOOTER_MOTOR</span> tells a reader exactly what
+    that number means, and if the ID ever changes you edit it in <em>one</em> place. As
+    we add a feeder, a turret and a climber, all their IDs will live here together.</p>
+  </div>
+
+  <div class="fill" data-answer="constexpr" data-hint="It's like int, but the value can never change while the program runs.">
+    <div class="q"><span class="qmark">?</span> Fill the blank — the keyword for a value that can't change at runtime:</div>
+    <div class="prompt-code">namespace canid {
+  ________ int SHOOTER_MOTOR = 1;
+}</div>
+    <div class="row">
+      <input type="text" placeholder="type the keyword">
+      <button class="check" type="button">Check</button>
+      <button class="hintbtn" type="button">Hint</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What does the <code class="inline">canid</code> namespace give us?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">It makes the CAN IDs run faster</button>
+      <button class="opt" data-correct="true">A clear, grouped way to refer to IDs — <code class="inline">canid::SHOOTER_MOTOR</code> — that avoids name clashes</button>
+      <button class="opt" data-correct="false">It connects the code to the real robot's wiring automatically</button>
+    </div>
+    <div class="explain ok">Namespaces group related names. <code class="inline">canid::SHOOTER_MOTOR</code> reads clearly and won't clash with other constants elsewhere in the codebase.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="09-testing-in-simulation.html"><span class="dir">← Previous</span><span class="ttl">Testing in simulation</span></a>
+    <a class="next" href="11-task-feeder.html"><span class="dir">Next →</span><span class="ttl">Task: add a feeder subsystem</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

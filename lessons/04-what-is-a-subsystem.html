@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4 · What is a subsystem? — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="04">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 1 · Your first subsystem</div>
+    <h1>What is a subsystem? Header &amp; body files</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 1</span>
+      <span class="pill time">~12 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll have created an empty <strong>SubShooter</strong> subsystem and understand the split between its <strong>header (.h)</strong> and <strong>body (.cpp)</strong> files.</p></div>
+  </div>
+
+  <p class="lead">Our goal for this whole module is to run a ball <strong>shooter</strong>:
+  a large wheel (a <em>flywheel</em>) that spins up fast, so that a ball pushed into
+  it gets fired toward a goal. Shooting is one of the most common problems in FRC.</p>
+
+  <div class="box concept">
+    <div class="box-title">What's a subsystem?</div>
+    <p>A <strong>subsystem</strong> is a part of the robot with its own motors, sensors
+    and structural bits — like a shooter, an arm, or a drivebase. We organise our
+    code into subsystems so each part stays self-contained and easy to reason about.
+    Our shooter will be a subsystem.</p>
+  </div>
+
+  <h2>Make folders for subsystems</h2>
+  <p>In VS Code's file explorer (left side):</p>
+  <ol>
+    <li>Right-click the <span class="pill">cpp</span> folder under <span class="pill">src/main</span> → <strong>New Folder…</strong> → name it <strong>subsystems</strong>.</li>
+    <li>Do the same under <span class="pill">src/main/include</span> — another <strong>subsystems</strong> folder.</li>
+  </ol>
+
+  <h2>Create the subsystem</h2>
+  <p>Right-click <span class="pill">src/main/cpp/subsystems</span> → <strong>Create a new class/command</strong> → choose <strong>Subsystem</strong>. Name it <strong>SubShooter</strong>.</p>
+
+  <div class="box concept">
+    <div class="box-title">Naming convention</div>
+    <p>We always start subsystem names with <strong>Sub</strong> (SubShooter, SubFeeder,
+    SubTurret…). It makes them easy to tell apart from <em>Commands</em>, which you'll
+    meet soon.</p>
+  </div>
+
+  <h2>Two files, one subsystem</h2>
+  <p>VS Code created two files. They are two halves of the same subsystem:</p>
+  <ul>
+    <li><strong>SubShooter.h</strong> — the <strong>header</strong>. Here we <em>declare</em> what the subsystem <strong>has</strong> and <strong>can do</strong>.</li>
+    <li><strong>SubShooter.cpp</strong> — the <strong>body</strong>. Here we <em>define</em> <strong>how</strong> it does those things.</li>
+  </ul>
+  <p>With your cursor in one file, press <span class="pill">Alt + O</span> to jump to its
+  partner. Press it again to swap back — you'll use this constantly.</p>
+
+  <p>Here's the empty header VS Code generated for you:</p>
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+#pragma once
+
+#include &lt;frc2/command/SubsystemBase.h&gt;
+
+class SubShooter : public frc2::SubsystemBase {
+ public:
+  SubShooter();
+
+  // Will be called periodically whenever the CommandScheduler runs.
+  void Periodic() override;
+
+ private:
+  // Components (e.g. motor controllers and sensors) should generally be
+  // declared private and exposed only through public methods.
+};
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Our SubShooter, in plain English</div>
+    <p>By the end of the module our shooter will:</p>
+    <ul>
+      <li><strong>Have</strong> one motor (a Spark Flex motor controller), and</li>
+      <li><strong>Can</strong> start spinning, and</li>
+      <li><strong>Can</strong> stop spinning.</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Which file declares <em>what</em> a subsystem has and can do?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">The header file (.h)</button>
+      <button class="opt" data-correct="false">The body file (.cpp)</button>
+      <button class="opt" data-correct="false">Constants.h</button>
+    </div>
+    <div class="explain ok">The header (.h) <em>declares</em> what exists — the things a subsystem has and the functions it can do. The body (.cpp) <em>defines</em> how each of those functions actually works.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="03-vendor-libraries-build.html"><span class="dir">← Previous</span><span class="ttl">Vendor libraries &amp; building</span></a>
+    <a class="next" href="05-creating-objects.html"><span class="dir">Next →</span><span class="ttl">Creating objects in C++</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

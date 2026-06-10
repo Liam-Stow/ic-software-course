@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>15 · Feedforward &amp; feedback control — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="15">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 4 · Smart motor control</div>
+    <h1>Feedforward &amp; feedback control</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 4</span>
+      <span class="pill time">~15 min · concepts</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll understand <em>why</em> "80% power" isn't good enough for a shooter, and what <strong>feedforward</strong> and <strong>feedback (PID)</strong> control actually do.</p></div>
+  </div>
+
+  <p class="lead">This lesson is all concepts — no typing. Take your time; everything in
+  Module 4 builds on these ideas.</p>
+
+  <h2>The problem with "just set 80% power"</h2>
+  <p>In Module 1 we set the shooter to 80% power. But power is <strong>not the same as
+  speed</strong>. The actual flywheel speed at 80% power drifts depending on conditions:</p>
+  <ul>
+    <li>When the <strong>battery gets low</strong>, the same 80% delivers less, so the wheel slows.</li>
+    <li>When <strong>other subsystems draw power</strong>, the flywheel slows.</li>
+    <li>Right after a ball is fired, the wheel has slowed and needs to recover.</li>
+  </ul>
+  <p>For a shooter this is a big deal: a slower wheel means the ball flies less far and
+  <strong>misses the target</strong>. We don't want "about 80% power" — we want an
+  <strong>exact, held speed</strong>, say 1000 RPM, no matter what.</p>
+
+  <div class="box concept">
+    <div class="box-title">Feedforward — a smart first guess</div>
+    <p><strong>Feedforward</strong> predicts how much voltage <em>should</em> get the wheel
+    to the target speed, based on a model of the motor. It does most of the work up front.
+    The main term we tune is <strong>V</strong> (the velocity feedforward gain): roughly,
+    "how much voltage per unit of speed". A good feedforward gets you very close to target
+    on its own.</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Feedback (PID) — correcting the error</div>
+    <p>No model is perfect, so we add <strong>feedback</strong>: the controller measures
+    the <em>actual</em> speed, compares it to the target, and nudges the voltage to close
+    the gap. This is the famous <strong>PID</strong> controller. Its three gains:</p>
+    <ul>
+      <li><strong>P</strong> (proportional) — push harder the further you are from target. The main one you'll tune.</li>
+      <li><strong>I</strong> (integral) — corrects small, persistent errors that build up over time.</li>
+      <li><strong>D</strong> (derivative) — damps overshoot by reacting to how fast the error is changing.</li>
+    </ul>
+    <p>Put together, feedforward + PID is often written <strong>PIDF</strong>.</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">The recipe we'll follow</div>
+    <p>For a well-made flywheel, a great tuning recipe is: set everything to zero, raise
+    <strong>V</strong> until you reach the speed you want, then raise <strong>P</strong>
+    until it gets there quickly without overshooting or oscillating. <strong>I</strong> and
+    <strong>D</strong> can usually stay at zero for a flywheel. You'll do exactly this in
+    Lesson 19.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why is setting "80% power" not enough for a shooter?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">80% is too slow for any shooter</button>
+      <button class="opt" data-correct="true">Power isn't the same as speed — actual speed sags with battery level and load, hurting accuracy</button>
+      <button class="opt" data-correct="false">Motors can't run at exactly 80%</button>
+    </div>
+    <div class="explain ok">The same power gives different speeds as the battery drains or other systems draw current. A shooter needs a held, exact speed, which means controlling <em>speed</em> directly — not power.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What's the difference between feedforward and feedback?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Feedforward predicts the voltage needed up front; feedback measures the actual error and corrects it</button>
+      <button class="opt" data-correct="false">They're two names for the same thing</button>
+      <button class="opt" data-correct="false">Feedforward is for position, feedback is for velocity, always</button>
+    </div>
+    <div class="explain ok">Feedforward is the educated first guess from a model; feedback (PID) watches the real measurement and trims the error the model missed. Used together they hold a target tightly.</div>
+  </div>
+
+  <div class="resources">
+    <a class="pill" href="https://docs.wpilib.org/en/stable/docs/software/advanced-controls/introduction/introduction-to-pid.html" target="_blank" rel="noopener">📘 WPILib: Intro to PID →</a>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="14-utilities-ctre.html"><span class="dir">← Previous</span><span class="ttl">Utilities &amp; CTRE Phoenix</span></a>
+    <a class="next" href="16-velocity-control.html"><span class="dir">Next →</span><span class="ttl">Velocity control with ICSparkFlex</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

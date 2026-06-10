@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6 · Functions &amp; commands — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="06">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 1 · Your first subsystem</div>
+    <h1>Functions &amp; commands</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 1</span>
+      <span class="pill time">~18 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Your shooter will have a <strong>SpinFlywheel()</strong> command that spins the motor at 80% power while it runs, and stops it when it ends.</p></div>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Functions</div>
+    <p>A <strong>function</strong> is a block of code that can be <em>called</em> to run
+    later. You can spot functions by the <span class="inline">( )</span> parentheses at
+    the end of their names. Every line inside a function's <span class="inline">{ }</span>
+    braces runs when the function is called.</p>
+  </div>
+
+  <h2>Declare the command in the header</h2>
+  <p>Under <span class="inline">public:</span> in <strong>SubShooter.h</strong>, declare a
+  function called <strong>SpinFlywheel()</strong>:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+ public:
+  SubShooter();
+
+  void Periodic() override;
+
+  frc2::CommandPtr SpinFlywheel();
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Function → command</div>
+    <p>SpinFlywheel returns an <span class="inline">frc2::CommandPtr</span> (say
+    "Command Pointer") — an action the robot can perform. Strictly, SpinFlywheel is a
+    <em>function that creates a command</em>, but we usually simplify and just call it
+    "a command". You'll run it on a button press soon.</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Public vs private</div>
+    <p>Notice the motor object from last lesson is <strong>private</strong>, but
+    SpinFlywheel is <strong>public</strong>. The motor doesn't need to be touched from
+    outside the subsystem, but the command does — other code (the button bindings)
+    needs to reach it. So it has to be public.</p>
+  </div>
+
+  <h2>Define it in the body</h2>
+  <p>Jump to <strong>SubShooter.cpp</strong> with <span class="pill">Alt + O</span> and
+  fill in SpinFlywheel:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubShooter.cpp">
+<code>
+frc2::CommandPtr SubShooter::SpinFlywheel() {
+  return StartEnd(
+      [this] {
+        _shooterMotor.Set(0.8);  // On Start
+      },
+      [this] {
+        _shooterMotor.Set(0);    // On End
+      });
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">What StartEnd does</div>
+    <p>A <strong>StartEnd</strong> command runs one block of code when it
+    <em>starts</em> and another when it <em>ends</em>. Here, on start we set the motor to
+    80% power; on end we set it back to 0%.</p>
+    <p><span class="inline">_shooterMotor.Set(0)</span> makes the motor stay still;
+    <span class="inline">.Set(1)</span> runs it at full power forward. In general, more
+    power means faster spinning.</p>
+  </div>
+
+  <div class="box pitfall">
+    <div class="box-title">Always clean up</div>
+    <p>Setting the motor back to 0% on end is important — otherwise it would keep
+    spinning after the command stops. A command should almost always "clean itself up"
+    like this.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> The question from the guide: how would you make the motor spin <strong>backwards</strong>?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">Call <code class="inline">.Set(0)</code></button>
+      <button class="opt" data-correct="true">Give <code class="inline">.Set()</code> a negative number, e.g. <code class="inline">.Set(-0.8)</code></button>
+      <button class="opt" data-correct="false">It's impossible without a second motor</button>
+    </div>
+    <div class="explain ok">Power runs from -1.0 to 1.0. Positive spins one way, negative spins the other, and 0 stops it. So <code class="inline">.Set(-0.8)</code> spins backwards at 80%.</div>
+  </div>
+
+  <div class="fill" data-answer="_shooterMotor.Set(0)|_shooterMotor.Set(0);|.Set(0)" data-hint="Set the motor to zero power so it stops when the command ends.">
+    <div class="q"><span class="qmark">?</span> What line goes in the "On End" block to make a StartEnd command clean up after itself?</div>
+    <div class="prompt-code">[this] {
+  ______   // On End
+}</div>
+    <div class="row">
+      <input type="text" placeholder="type the line">
+      <button class="check" type="button">Check</button>
+      <button class="hintbtn" type="button">Hint</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="05-creating-objects.html"><span class="dir">← Previous</span><span class="ttl">Creating objects in C++</span></a>
+    <a class="next" href="07-singleton-getinstance.html"><span class="dir">Next →</span><span class="ttl">Public, private &amp; the Singleton</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

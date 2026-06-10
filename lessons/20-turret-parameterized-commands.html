@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>20 · A turret &amp; commands with inputs — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="20">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 5 · Position control: the turret</div>
+    <h1>A turret &amp; commands with inputs</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 5</span>
+      <span class="pill time">~18 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll have a <strong>SubTurret</strong> subsystem with a <strong>TurnTo(angle)</strong> command — your first command that takes an <strong>input</strong>.</p></div>
+  </div>
+
+  <p class="lead">A shooter is better if you can aim it without turning the whole robot.
+  So we'll add a <strong>turret</strong>: the shooter sits on a big toothed gear, and a
+  motor rotates it to any angle. This is <strong>position</strong> control (an exact
+  angle), where the flywheel was <strong>velocity</strong> control (an exact speed).</p>
+
+  <h2>Create the turret subsystem</h2>
+  <p>Make a new Subsystem called <strong>SubTurret</strong> (same steps as the shooter).
+  Add a turret CAN ID to Constants.h, then set up its header with an ICSparkFlex:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/Constants.h">
+<code>
+namespace canid {
+  constexpr int SHOOTER_MOTOR = 1;
+  constexpr int FEEDER_MOTOR  = 2;
+  constexpr int TURRET_MOTOR  = 3;
+}
+</code>
+  </div>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubTurret.h">
+<code>
+#pragma once
+
+#include &lt;frc2/command/SubsystemBase.h&gt;
+#include &lt;frc2/command/Commands.h&gt;
+#include "utilities/ICSparkFlex.h"
+#include "Constants.h"
+
+class SubTurret : public frc2::SubsystemBase {
+ public:
+  SubTurret();
+  static SubTurret&amp; GetInstance() { static SubTurret inst; return inst; }
+
+  void Periodic() override;
+
+  // Commands
+  frc2::CommandPtr TurnTo(units::degree_t angle);  // Rotate turret to angle. 0_deg = forward.
+
+ private:
+  ICSparkFlex _turretMotor{canid::TURRET_MOTOR, 60_A};
+};
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Commands with parameters</div>
+    <p>Every command so far did the exact same thing each time. <span class="inline">TurnTo</span>
+    is different: it takes an <strong>input</strong> — the target angle. You give a function
+    an input by writing the input's <em>type</em> and <em>name</em> inside the parentheses.
+    Here that's <span class="inline">units::degree_t angle</span>: an angle, called
+    <span class="inline">angle</span>. Now the one command can aim anywhere.</p>
+  </div>
+
+  <h2>Define TurnTo in the body</h2>
+  <p>We'll use a <span class="inline">Run</span> command (it runs its block repeatedly
+  while active — ideal for continuously commanding a position):</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubTurret.cpp">
+<code>
+frc2::CommandPtr SubTurret::TurnTo(units::degree_t angle) {
+  return Run([this, angle] {
+    _turretMotor.SetPositionTarget(angle);
+  });
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Notice <code class="inline">[this, angle]</code></div>
+    <p>The square brackets are the lambda's "capture list" — the outside values the block
+    is allowed to use. We capture <span class="inline">this</span> (so we can reach
+    <span class="inline">_turretMotor</span>) and <span class="inline">angle</span> (so the
+    block knows where to aim). The StartEnd blocks earlier only needed
+    <span class="inline">[this]</span>.</p>
+  </div>
+
+  <div class="box pitfall">
+    <div class="box-title">It's commanding motor turns, not degrees — yet</div>
+    <p><span class="inline">SetPositionTarget(angle)</span> currently treats the angle as
+    turns of the <em>motor shaft</em>, ignoring the gearbox between the motor and the
+    turret. We'll fix that with a gear ratio in the next lesson.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What makes <code class="inline">TurnTo(angle)</code> different from <code class="inline">SpinFlywheel()</code>?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">It takes an input (a parameter), so it can do something different each time it's called</button>
+      <button class="opt" data-correct="false">It doesn't return a command</button>
+      <button class="opt" data-correct="false">It can only be called once ever</button>
+    </div>
+    <div class="explain ok">By declaring <code class="inline">units::degree_t angle</code> in the parentheses, TurnTo can aim at any angle you pass in — one flexible command instead of many fixed ones.</div>
+  </div>
+
+  <div class="fill" data-answer="units::degree_t|units::degree_t angle" data-hint="A WPILib units type for an angle in degrees.">
+    <div class="q"><span class="qmark">?</span> Fill the blank — the input type that represents an angle:</div>
+    <div class="prompt-code">frc2::CommandPtr TurnTo(__________ angle);</div>
+    <div class="row">
+      <input type="text" placeholder="type the parameter type">
+      <button class="check" type="button">Check</button>
+      <button class="hintbtn" type="button">Hint</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="19-tuning-pidf.html"><span class="dir">← Previous</span><span class="ttl">Tuning PIDF gains</span></a>
+    <a class="next" href="21-gear-ratios.html"><span class="dir">Next →</span><span class="ttl">Gear ratios &amp; conversion factors</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

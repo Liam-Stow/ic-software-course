@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>14 · Utilities &amp; CTRE Phoenix — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="14">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 3 · Working as a team</div>
+    <h1>Utilities &amp; CTRE Phoenix</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 3</span>
+      <span class="pill time">~12 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Your project will contain IC's <strong>utilities</strong> helper code and the <strong>CTRE Phoenix</strong> vendor library, ready for the smarter motor control coming in Module 4.</p></div>
+  </div>
+
+  <p class="lead">IC has written helper code over the years that makes common jobs
+  easier — most importantly a smarter motor-controller wrapper called
+  <strong>ICSparkFlex</strong>. We'll borrow that helper code from the team project you
+  just cloned.</p>
+
+  <h2>Copy the utilities folders</h2>
+  <p>From the IC project you cloned in the last lesson, copy the
+  <strong>utilities</strong> folder from both:</p>
+  <ul>
+    <li><span class="inline">src/main/cpp/utilities</span> → into your project's
+    <span class="inline">src/main/cpp</span>, and</li>
+    <li><span class="inline">src/main/include/utilities</span> → into your project's
+    <span class="inline">src/main/include</span>.</li>
+  </ul>
+  <p>You should now see a <strong>utilities</strong> folder in your project's file
+  explorer in VS Code.</p>
+
+  <h2>Install CTRE Phoenix</h2>
+  <div class="box concept">
+    <div class="box-title">Why another library?</div>
+    <p>Some of the utilities depend on a second vendor library: <strong>CTRE Phoenix</strong>,
+    from Cross The Road Electronics. It mainly lets us use their TalonFX motor controllers.
+    Even though our shooter uses a Rev Spark, the utilities reference Phoenix, so we need
+    it installed for the project to build.</p>
+  </div>
+  <ol>
+    <li>Open the <strong>WPILib Vendor Dependencies</strong> sidebar.</li>
+    <li>Install <strong>CTRE-Phoenix (v6)</strong> from the available list.</li>
+  </ol>
+
+  <div class="box simcheck">
+    <div class="box-title">Check it builds</div>
+    <p>Build your code (<span class="pill">Ctrl + Shift + P</span> →
+    <span class="pill">WPILib: Build Robot Code</span>). You want
+    <strong>BUILD SUCCESSFUL</strong> again. If the build can't find
+    <span class="inline">utilities/ICSparkFlex.h</span> or Phoenix types, re-check the two
+    copy steps and that CTRE-Phoenix (v6) is installed.</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Meet ICSparkFlex</div>
+    <p>From here on we'll swap our plain <span class="inline">rev::spark::SparkFlex</span>
+    for IC's <span class="inline">ICSparkFlex</span>. It wraps the Rev Spark with extra
+    powers: built-in PIDF velocity/position control, easy current limits, simulation
+    helpers, and automatic dashboard reporting. That's exactly what Module 4 needs.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why do we install CTRE Phoenix even though our shooter uses a Rev Spark?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">IC's utilities code depends on it, so the project won't build without it</button>
+      <button class="opt" data-correct="false">Rev Sparks secretly run on Phoenix</button>
+      <button class="opt" data-correct="false">It's required to open VS Code</button>
+    </div>
+    <div class="explain ok">The utilities you copied reference Phoenix types, so the library must be present for the code to compile — even if you're not directly using a TalonFX yet.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="13-git-cloning.html"><span class="dir">← Previous</span><span class="ttl">Git &amp; cloning the IC repo</span></a>
+    <a class="next" href="15-feedforward-feedback.html"><span class="dir">Next →</span><span class="ttl">Feedforward &amp; feedback control</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

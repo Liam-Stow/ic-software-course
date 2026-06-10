@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1 · Installing WPILib — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="01">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 0 · Getting set up</div>
+    <h1>Installing WPILib &amp; its tools</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 0</span>
+      <span class="pill time">~20 min (mostly waiting)</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll have <strong>WPILib VS Code</strong> installed — the one tool you need to write, build and simulate FRC robot code.</p></div>
+  </div>
+
+  <p class="lead">Throughout this course you'll build a mock robot program that solves
+  common FRC problems: a shooter, a feeder, a turret and a climber. None of it
+  runs on a real robot — everything runs in <strong>simulation</strong> on your own
+  computer, which is perfect for learning.</p>
+
+  <div class="box concept">
+    <div class="box-title">What is WPILib?</div>
+    <p>WPILib is the official software library and toolset for FRC. The installer
+    gives you a special copy of <strong>VS Code</strong> (a code editor) that already
+    knows how to build robot code, plus the simulator and other tools. We use a
+    separate copy so it never clashes with any normal VS Code you might already have.</p>
+  </div>
+
+  <h2>Install it</h2>
+  <p>Follow the official WPILib install instructions for your operating system:</p>
+  <div class="resources">
+    <a class="pill" href="https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html" target="_blank" rel="noopener">📘 WPILib installation guide →</a>
+  </div>
+
+  <div class="box pitfall">
+    <div class="box-title">Don't stop early</div>
+    <p>On the install page, scroll down a little further and also complete the
+    <strong>"Additional C++ installation"</strong> step. It's easy to miss, and skipping
+    it means C++ tools won't be fully set up. We write our robot code in C++, so
+    this part matters.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why do we install a separate copy of VS Code through the WPILib installer?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">Because regular VS Code can't edit C++ files</button>
+      <button class="opt" data-correct="true">So the FRC tooling is bundled and won't clash with any existing VS Code setup</button>
+      <button class="opt" data-correct="false">Because it's the only editor that exists for Windows</button>
+    </div>
+    <div class="explain ok">The WPILib copy comes pre-loaded with the FRC build tools, simulator and extensions, and stays isolated from any other VS Code you have. Regular VS Code can edit C++ too — it just wouldn't be set up to build robot code out of the box.</div>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">A note on the blue links</div>
+    <p>Some terms in this course link out to deeper explanations (like the WPILib
+    docs above). You don't have to read all of them — follow a link only when you'd
+    like more detail on a topic.</p>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev disabled" href="#"><span class="dir">← Previous</span><span class="ttl">Start of course</span></a>
+    <a class="next" href="02-create-project.html"><span class="dir">Next →</span><span class="ttl">Creating your first project</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

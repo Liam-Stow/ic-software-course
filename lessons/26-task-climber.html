@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>26 · Task: build a climber — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="26">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 6 · Automating the robot</div>
+    <h1>Task: build a climber subsystem</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 6</span>
+      <span class="pill time">~40 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>Your mission</h2><p>Build a <strong>climber</strong> from scratch — a motor-driven elevator that raises and lowers a hook, using <strong>position control</strong> just like the turret.</p></div>
+  </div>
+
+  <p class="lead">Almost every FRC game has a climbing challenge: the robot must lift itself
+  onto a bar, rope, or hook at the end of the match. A common design is an
+  <strong>elevator</strong> — a hook on a rack-and-pinion that a single motor drives up to
+  latch the bar, then back down to pull the robot off the ground.</p>
+
+  <div class="box concept">
+    <div class="box-title">How a rack-and-pinion elevator works</div>
+    <p>A <strong>pinion gear</strong> on the motor meshes with a straight toothed
+    <strong>rack</strong>. Spinning the pinion one way pushes the rack (and its hook) up;
+    spinning it the other way pulls it down. So one motor, turning to a target position,
+    controls the whole climb — exactly the position-control problem you solved for the
+    turret.</p>
+  </div>
+
+  <div class="box task">
+    <div class="box-title">The brief</div>
+    <p>Make a <strong>SubClimber</strong> subsystem that:</p>
+    <ul class="checklist">
+      <li>Has <strong>one motor</strong> on the pinion gear (a new CAN ID).</li>
+      <li>Uses <strong>PID position control</strong> to drive to a height — reuse what you did for the turret.</li>
+      <li>Has commands to <strong>raise</strong> and <strong>lower</strong> the hook (drive to two positions).</li>
+      <li>Is a Singleton, and is bound to buttons in RobotContainer.</li>
+      <li>Is <strong>simulated</strong> — but with an <span class="inline">ElevatorSim</span> instead of a FlywheelSim or DCMotorSim.</li>
+    </ul>
+    <p><strong>Think first:</strong> what electronic components does it have? What functions
+    should it perform? Then build and test in the simulator.</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Where to look if you're stuck</div>
+    <p>The climber is the turret with a different name and an
+    <span class="inline">ElevatorSim</span> in place of the
+    <span class="inline">DCMotorSim</span>. Revisit Lessons 20–23: parameterized commands,
+    gear ratios/conversion factors, position simulation, and tolerances. The
+    <a href="https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/physics-sim.html" target="_blank" rel="noopener">WPILib physics-sim docs ↗</a>
+    describe <span class="inline">ElevatorSim</span> in detail.</p>
+  </div>
+
+  <p>This one is bigger than the feeder — give it a real go before peeking. Designing the
+  subsystem yourself is the whole point.</p>
+
+  <details class="reveal">
+    <summary>Show a worked solution <span class="hint">— design it yourself first!</span></summary>
+    <div class="reveal-body">
+
+      <p>There's no single right answer — this is one clean version. Heights and gains are
+      examples; tune them in sim.</p>
+
+      <h3>Constants.h — add a climber CAN ID</h3>
+      <div class="codeblock type" data-lang="cpp" data-file="src/main/include/Constants.h">
+<code>
+namespace canid {
+  constexpr int SHOOTER_MOTOR = 1;
+  constexpr int FEEDER_MOTOR  = 2;
+  constexpr int TURRET_MOTOR  = 3;
+  constexpr int CLIMBER_MOTOR = 4;
+}
+</code>
+      </div>
+
+      <h3>SubClimber.h</h3>
+      <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubClimber.h">
+<code>
+#pragma once
+
+#include &lt;frc2/command/SubsystemBase.h&gt;
+#include &lt;frc2/command/Commands.h&gt;
+#include &lt;frc/simulation/ElevatorSim.h&gt;
+#include &lt;frc/system/plant/DCMotor.h&gt;
+#include &lt;frc/system/plant/LinearSystemId.h&gt;
+#include "utilities/ICSparkFlex.h"
+#include "Constants.h"
+
+class SubClimber : public frc2::SubsystemBase {
+ public:
+  SubClimber();
+  static SubClimber&amp; GetInstance() { static SubClimber inst; return inst; }
+
+  void Periodic() override;
+  void SimulationPeriodic() override;
+
+  frc2::CommandPtr Raise();
+  frc2::CommandPtr Lower();
+  bool AtTarget();
+
+ private:
+  ICSparkFlex _climberMotor{canid::CLIMBER_MOTOR, 60_A};
+
+  // Physical characteristics for the simulation
+  static constexpr double GEARING = 20;
+  static constexpr units::kilogram_t CARRIAGE_MASS = 5_kg;
+  static constexpr units::meter_t DRUM_RADIUS = 0.02_m;
+  static constexpr units::meter_t MIN_HEIGHT = 0_m;
+  static constexpr units::meter_t MAX_HEIGHT = 1_m;
+  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NeoVortex(1);
+
+  frc::sim::ElevatorSim _climberSim{
+      MOTOR_MODEL, GEARING, CARRIAGE_MASS, DRUM_RADIUS,
+      MIN_HEIGHT, MAX_HEIGHT, true, 0_m};
+};
+</code>
+      </div>
+
+      <h3>SubClimber.cpp</h3>
+      <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubClimber.cpp">
+<code>
+#include "subsystems/SubClimber.h"
+#include &lt;frc/smartdashboard/SmartDashboard.h&gt;
+
+SubClimber::SubClimber() {
+  rev::spark::SparkBaseConfig config;
+  config.encoder.PositionConversionFactor(1.0 / GEARING);
+  config.encoder.VelocityConversionFactor(1.0 / GEARING / 60.0);
+  config.closedLoop.P(0.1);
+  config.closedLoop.D(0.1);
+  _climberMotor.AdjustConfig(config);
+
+  frc::SmartDashboard::PutData("Climber motor", &amp;_climberMotor);
+}
+
+void SubClimber::Periodic() {
+  frc::SmartDashboard::PutBoolean("Climber AtTarget", AtTarget());
+}
+
+void SubClimber::SimulationPeriodic() {
+  _climberSim.SetInputVoltage(_climberMotor.CalcSimVoltage());
+  _climberSim.Update(20_ms);
+  _climberMotor.IterateSim(_climberSim.GetVelocity());
+}
+
+frc2::CommandPtr SubClimber::Raise() {
+  return Run([this] { _climberMotor.SetPositionTarget(50_deg); });
+}
+
+frc2::CommandPtr SubClimber::Lower() {
+  return Run([this] { _climberMotor.SetPositionTarget(0_deg); });
+}
+
+bool SubClimber::AtTarget() {
+  return _climberMotor.OnPosTarget(1_deg);
+}
+</code>
+      </div>
+
+      <h3>RobotContainer.cpp — bind raise/lower</h3>
+      <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/RobotContainer.cpp">
+<code>
+#include "subsystems/SubClimber.h"
+
+void RobotContainer::ConfigureBindings() {
+  _controller.POVUp().OnTrue(SubClimber::GetInstance().Raise());
+  _controller.POVDown().OnTrue(SubClimber::GetInstance().Lower());
+}
+</code>
+      </div>
+
+      <p>Simulate, plot the climber height, and press the bindings — the carriage should
+      drive to each target and hold. If it does, you've designed and simulated a brand-new
+      mechanism on your own. That's the whole skill.</p>
+    </div>
+  </details>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Which simulation class fits a rack-and-pinion climber best?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">ElevatorSim — it models a mass lifted up and down by a motor</button>
+      <button class="opt" data-correct="false">FlywheelSim — because it has a spinning motor</button>
+      <button class="opt" data-correct="false">No sim exists for elevators</button>
+    </div>
+    <div class="explain ok">An elevator lifts a mass against gravity, which is exactly what ElevatorSim models. FlywheelSim only tracks a spinning wheel's speed, and DCMotorSim is for a generic rotating shaft.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why is the climber such good practice right after the turret?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">It reuses position control, conversion factors, tolerances and simulation — the same skills with a new mechanism</button>
+      <button class="opt" data-correct="false">It needs no motor at all</button>
+      <button class="opt" data-correct="false">It introduces a totally different programming language</button>
+    </div>
+    <div class="explain ok">The climber is the turret's twin: one motor, PID position control, a conversion factor, and a physics sim. Building it cements everything from Module 5.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="25-command-automation.html"><span class="dir">← Previous</span><span class="ttl">Command automation</span></a>
+    <a class="next" href="27-ninja-code.html"><span class="dir">Next →</span><span class="ttl">Ninja Code: going further</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

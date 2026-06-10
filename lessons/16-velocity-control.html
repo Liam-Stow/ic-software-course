@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>16 · Velocity control with ICSparkFlex — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="16">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 4 · Smart motor control</div>
+    <h1>Velocity control with ICSparkFlex</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 4</span>
+      <span class="pill time">~15 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Your shooter will use an <strong>ICSparkFlex</strong> with a current limit, and SpinFlywheel will target an exact <strong>1000 RPM</strong> instead of raw power.</p></div>
+  </div>
+
+  <h2>Swap to ICSparkFlex</h2>
+  <p>In <strong>SubShooter.h</strong>, change the include and the motor object. ICSparkFlex
+  lives in the utilities you copied in Module 3:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+#pragma once
+
+#include &lt;frc2/command/SubsystemBase.h&gt;
+#include &lt;frc2/command/Commands.h&gt;
+#include "utilities/ICSparkFlex.h"
+#include "Constants.h"
+
+class SubShooter : public frc2::SubsystemBase {
+ public:
+  static SubShooter&amp; GetInstance() { static SubShooter inst; return inst; }
+  SubShooter();
+
+  void Periodic() override;
+  frc2::CommandPtr SpinFlywheel();
+
+ private:
+  ICSparkFlex _shooterMotor{canid::SHOOTER_MOTOR, 60_A};
+};
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">A different second input</div>
+    <p>The motor no longer takes a motor <em>type</em> — ICSparkFlex assumes a brushless
+    motor. Instead its second input is a <strong>current limit</strong>:
+    <span class="inline">60_A</span> (60 amps). Setting current limits matters because:</p>
+    <ul>
+      <li>Drawing lots of current for a long time <strong>heats the motor</strong> and can damage it.</li>
+      <li>Drawing lots of current <strong>starves other subsystems</strong> of power.</li>
+    </ul>
+    <p>60 amps is a good starting point for the REV motors we use.</p>
+  </div>
+
+  <h2>Target a speed, not a power</h2>
+  <p>Now change <strong>SpinFlywheel()</strong> in <strong>SubShooter.cpp</strong> to target
+  1000 RPM (revolutions per minute):</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubShooter.cpp">
+<code>
+frc2::CommandPtr SubShooter::SpinFlywheel() {
+  return StartEnd(
+      [this] {
+        _shooterMotor.SetVelocityTarget(1000_rpm);  // On Start
+      },
+      [this] {
+        _shooterMotor.Set(0);                        // On End
+      });
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">SetVelocityTarget vs Set</div>
+    <p><span class="inline">Set(0.8)</span> meant "80% power". <span class="inline">SetVelocityTarget(1000_rpm)</span>
+    means "use the onboard PIDF controller to <em>hold</em> 1000 RPM, whatever power that
+    takes". On end we still <span class="inline">Set(0)</span> to release the motor.</p>
+    <p>The <span class="inline">_rpm</span> unit again lets the compiler keep your units
+    straight — no chance of confusing RPM with turns-per-second.</p>
+  </div>
+
+  <div class="box pitfall">
+    <div class="box-title">It won't actually spin up yet</div>
+    <p>If you simulate now, the target will read 1000 RPM but the actual speed stays at
+    zero. That's expected — we haven't built the physics simulation (Lesson 18) or tuned
+    the gains (Lesson 19) yet. One step at a time.</p>
+  </div>
+
+  <div class="fill" data-answer="60_A|60_a" data-hint="60 amps — note the unit suffix that makes it amps.">
+    <div class="q"><span class="qmark">?</span> Fill the blank — give the ICSparkFlex a 60-amp current limit:</div>
+    <div class="prompt-code">ICSparkFlex _shooterMotor{canid::SHOOTER_MOTOR, ______};</div>
+    <div class="row">
+      <input type="text" placeholder="type the current limit">
+      <button class="check" type="button">Check</button>
+      <button class="hintbtn" type="button">Hint</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why set a current limit on a motor?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">To avoid overheating the motor and to leave power for other subsystems</button>
+      <button class="opt" data-correct="false">To make the motor spin faster</button>
+      <button class="opt" data-correct="false">Because brushless motors require exactly 60 amps</button>
+    </div>
+    <div class="explain ok">Sustained high current heats and can damage motors, and hogs the battery from everything else. A sensible limit (60 A for our REV motors) protects both.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="15-feedforward-feedback.html"><span class="dir">← Previous</span><span class="ttl">Feedforward &amp; feedback</span></a>
+    <a class="next" href="17-constructors-dashboard.html"><span class="dir">Next →</span><span class="ttl">Constructors &amp; the dashboard</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

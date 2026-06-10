@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>25 · Command automation — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="25">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 6 · Automating the robot</div>
+    <h1>Command automation</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 6</span>
+      <span class="pill time">~22 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>One button press will <strong>aim the turret, spin up the shooter, wait until both are ready, and fire</strong> — all automatically.</p></div>
+  </div>
+
+  <p class="lead">The drivers want a single button that turns the turret to the target angle,
+  speeds up the shooter, and fires the instant both are ready. We'll build that
+  <strong>ShootSequence</strong> command by combining the AtTarget booleans from Lesson 23
+  with three new factories: <span class="inline">Parallel</span>,
+  <span class="inline">Sequence</span> and <span class="inline">WaitUntil</span>.</p>
+
+  <h2>Make a commands file</h2>
+  <p>Things are getting complex enough to deserve their own file. Right-click
+  <span class="inline">src/main/cpp/</span> and make a new <strong>commands</strong> folder,
+  and inside it a file named <strong>ShootingCommands.cpp</strong>. Do the same in
+  <span class="inline">src/main/include/commands/</span> for
+  <strong>ShootingCommands.h</strong>.</p>
+
+  <div class="box concept">
+    <div class="box-title">Why a namespace?</div>
+    <p>We store these commands in a <span class="inline">cmd</span> namespace so their names
+    can't clash with anything else in the project — just like
+    <span class="inline">canid</span> protected our CAN IDs back in Module 2.</p>
+  </div>
+
+  <p>Set up the header with the namespace, the include, and the command declaration:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/commands/ShootingCommands.h">
+<code>
+#pragma once
+
+#include &lt;frc2/command/Commands.h&gt;
+
+namespace cmd {
+  frc2::CommandPtr ShootSequence();
+}
+</code>
+  </div>
+
+  <h2>Define ShootSequence in the body</h2>
+  <p>In <strong>ShootingCommands.cpp</strong>, include the header and the three subsystems,
+  then build the command. Because command files lean on the
+  <span class="inline">frc2::cmd</span> factories so heavily, we add a
+  <span class="inline">using</span> line to avoid typing the namespace every time:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/commands/ShootingCommands.cpp">
+<code>
+#include "commands/ShootingCommands.h"
+#include "subsystems/SubShooter.h"
+#include "subsystems/SubTurret.h"
+#include "subsystems/SubFeeder.h"
+
+namespace cmd {
+using namespace frc2::cmd;
+
+frc2::CommandPtr ShootSequence() {
+  return Parallel(
+    SubShooter::GetInstance().SpinFlywheel(),
+    SubTurret::GetInstance().TurnTo(30_deg),
+    Sequence(
+      WaitUntil([] { return SubShooter::GetInstance().AtTarget(); }),
+      WaitUntil([] { return SubTurret::GetInstance().AtTarget(); }),
+      SubFeeder::GetInstance().Feed()
+    )
+  );
+}
+}
+</code>
+  </div>
+
+  <div class="box pitfall">
+    <div class="box-title">Keep <code class="inline">using namespace</code> out of headers</div>
+    <p>The <span class="inline">using namespace frc2::cmd;</span> line is fine in a
+    <strong>.cpp</strong> command file, but never put it in a <strong>.h</strong> header —
+    headers get included all over the project, and the shortcut would leak everywhere and
+    cause name clashes.</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Reading the composition</div>
+    <p><span class="inline">Parallel(...)</span> runs everything inside it at the same time:
+    the flywheel spins up <em>and</em> the turret turns <em>and</em> the inner
+    <span class="inline">Sequence</span> runs — all together. The
+    <span class="inline">Sequence</span> runs its steps one after another: first
+    <span class="inline">WaitUntil</span> the shooter is at target, then
+    <span class="inline">WaitUntil</span> the turret is at target, and only then
+    <span class="inline">Feed()</span> the ball. The two
+    <span class="inline">[]&nbsp;{...}</span> lambdas are little yes/no questions that
+    WaitUntil keeps asking until the answer is true.</p>
+  </div>
+
+  <h2>Bind it to a button</h2>
+  <p>In <strong>RobotContainer.cpp</strong>, include the commands file and put
+  ShootSequence on the A button. We'll also keep two buttons to swing the turret manually for
+  testing:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/RobotContainer.cpp">
+<code>
+void RobotContainer::ConfigureBindings() {
+  _controller.A().WhileTrue(cmd::ShootSequence());
+
+  _controller.X().OnTrue(SubTurret::GetInstance().TurnTo(30_deg));
+  _controller.Y().OnTrue(SubTurret::GetInstance().TurnTo(0_deg));
+}
+</code>
+  </div>
+
+  <div class="box simcheck">
+    <div class="box-title">Watch the sequence play out</div>
+    <p>Simulate and plot all the subsystems together. Press A and you'll see:</p>
+    <ul class="checklist">
+      <li>Shooter and turret both start moving immediately (Parallel).</li>
+      <li>Each reaches its target at its own pace.</li>
+      <li>Only once <em>both</em> AtTarget booleans are true does the feeder run.</li>
+      <li>Release A and the shooter and feeder stop. 🎉</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What does <code class="inline">WaitUntil</code> do in the sequence?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">It pauses the sequence until its condition (e.g. AtTarget) becomes true</button>
+      <button class="opt" data-correct="false">It waits a fixed number of seconds</button>
+      <button class="opt" data-correct="false">It runs the shooter and turret in parallel</button>
+    </div>
+    <div class="explain ok">WaitUntil holds the sequence until the lambda returns true — that's how we wait for the shooter and turret to actually reach target before feeding.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why is the feeding logic inside a <code class="inline">Sequence</code> but the whole thing inside a <code class="inline">Parallel</code>?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Spin-up and aiming should happen together (parallel), but waiting-then-feeding must happen in order (sequence)</button>
+      <button class="opt" data-correct="false">Sequence is faster than Parallel</button>
+      <button class="opt" data-correct="false">Parallel can only hold one command</button>
+    </div>
+    <div class="explain ok">Parallel starts the flywheel, the turret, and the wait-then-feed chain all at once; the inner Sequence makes sure feeding only happens after both are on target.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="24-command-lifecycle.html"><span class="dir">← Previous</span><span class="ttl">The command lifecycle</span></a>
+    <a class="next" href="26-task-climber.html"><span class="dir">Next →</span><span class="ttl">Task: build a climber</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>
