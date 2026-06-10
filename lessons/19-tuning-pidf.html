@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19 · Tuning PIDF gains — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="19">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 4 · Smart motor control</div>
+    <h1>Tuning PIDF gains</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 4</span>
+      <span class="pill time">~20 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Your flywheel's actual speed will <strong>match its target</strong>, and you'll have saved the gains you found into the code.</p></div>
+  </div>
+
+  <p class="lead">In the last lesson the target velocity jumped to 1000 RPM but the actual
+  velocity didn't budge. That's because all the PIDF gains are still zero. Let's fix that
+  by tuning live in the simulator, then lock the values into the code.</p>
+
+  <h2>Tune live in NetworkTables</h2>
+  <p>Because we sent the whole ICSparkFlex to the dashboard with
+  <span class="inline">PutData</span>, its gains appear as editable fields in
+  NetworkTables. Simulate, hold the shoot button, and graph target vs actual velocity.
+  Then follow the recipe from Lesson 15:</p>
+  <ol>
+    <li>Set every gain to <strong>zero</strong>.</li>
+    <li>Double the feedforward <strong>V</strong> until the actual velocity reaches the target speed.</li>
+    <li>Raise <strong>P</strong> until it gets there quickly, without overshooting or oscillating.</li>
+    <li>Leave <strong>I</strong> and <strong>D</strong> at zero — a well-made flywheel rarely needs them.</li>
+  </ol>
+
+  <div class="box concept">
+    <div class="box-title">Reading the graph</div>
+    <p>Too little V/P: actual creeps up slowly or never reaches target. Too much P: actual
+    overshoots and wobbles (oscillates) around the target. You're aiming for a quick rise
+    that settles cleanly on the target line.</p>
+  </div>
+
+  <h2>Save the gains in code</h2>
+  <p>Live values in NetworkTables are lost when you close the sim. To keep them, save them
+  in the <strong>constructor</strong>. PID gains go into a <em>config</em> sent to the
+  Spark (so the controller runs onboard the motor controller, reducing sensing delays);
+  feedforward is set with a direct function call:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubShooter.cpp">
+<code>
+SubShooter::SubShooter() {
+  frc::SmartDashboard::PutData("Shooter motor", &amp;_shooterMotor);
+
+  rev::spark::SparkBaseConfig config;
+  config.closedLoop.P(0.3);
+  _shooterMotor.AdjustConfig(config);
+
+  _shooterMotor.SetFeedforwardVelocity(0.11_V / 1_tps);
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">What these numbers mean</div>
+    <p>Here we set <strong>P = 0.3</strong> and <strong>V = 0.11</strong>. All the other
+    gains (feedback I and D; feedforward S, G, A) stay at their default of zero. The
+    feedforward is written <span class="inline">0.11_V / 1_tps</span> — "0.11 volts per
+    turn-per-second" — units that make the relationship between voltage and speed explicit.</p>
+  </div>
+
+  <div class="box simcheck">
+    <div class="box-title">Success looks like</div>
+    <ul class="checklist">
+      <li>Simulate again — the gains start already populated.</li>
+      <li>Hold the shoot button: actual velocity rises quickly and sits on the target.</li>
+      <li>The shooter now holds 1000 RPM regardless of simulated load. 🎉</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why do we save the gains in the constructor instead of just tuning in NetworkTables?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">NetworkTables values make the robot slower</button>
+      <button class="opt" data-correct="true">Live NetworkTables values are lost when the sim closes — saving them in code makes them permanent</button>
+      <button class="opt" data-correct="false">The constructor is the only place gains are allowed</button>
+    </div>
+    <div class="explain ok">Tuning live is how you <em>find</em> good gains, but those edits don't persist. Writing them into the constructor bakes them into the program for good.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Following the recipe, which gain do you raise <em>first</em>?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">The feedforward V, until you reach the target speed</button>
+      <button class="opt" data-correct="false">D, all the way to maximum</button>
+      <button class="opt" data-correct="false">I, before anything else</button>
+    </div>
+    <div class="explain ok">Feedforward V does most of the work, so raise it first to get near the target, then add P to close the gap quickly. I and D usually stay at zero for a flywheel.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="18-flywheel-sim.html"><span class="dir">← Previous</span><span class="ttl">Simulating the physics</span></a>
+    <a class="next" href="20-turret-parameterized-commands.html"><span class="dir">Next →</span><span class="ttl">A turret &amp; commands with inputs</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

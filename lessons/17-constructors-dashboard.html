@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>17 · Constructors &amp; the dashboard — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="17">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 4 · Smart motor control</div>
+    <h1>Constructors &amp; the dashboard</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 4</span>
+      <span class="pill time">~12 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll use the subsystem's <strong>constructor</strong> to send the whole ICSparkFlex object to the dashboard once, so you can read and tune it live.</p></div>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">What's a constructor?</div>
+    <p>Every class has one special function with the <strong>same name as the class
+    itself</strong> — the <strong>constructor</strong>. It runs <strong>once</strong>, when
+    the object is first created. It's the perfect place for one-time setup. Right now
+    SubShooter's constructor is "defaulted", meaning it does nothing:</p>
+  </div>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubShooter.cpp">
+<code>
+SubShooter::SubShooter() = default;
+</code>
+  </div>
+
+  <h2>Let the ICSparkFlex report itself</h2>
+  <p>The ICSparkFlex can put all its own info on the dashboard for us. So we can delete the
+  old <span class="inline">PutNumber("shooter speed", ...)</span> line from
+  <span class="inline">Periodic()</span>, and instead send the whole object to the
+  dashboard <strong>once</strong>, in the constructor:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubShooter.cpp">
+<code>
+#include "subsystems/SubShooter.h"
+#include &lt;frc/smartdashboard/SmartDashboard.h&gt;
+
+SubShooter::SubShooter() {
+  frc::SmartDashboard::PutData("Shooter motor", &amp;_shooterMotor);
+}
+
+// This method will be called once per scheduler run
+void SubShooter::Periodic() {}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Why the <code class="inline">&amp;</code> in front of <code class="inline">_shooterMotor</code>?</div>
+    <p>The <span class="inline">&amp;</span> is a C++ operator that gets the
+    <strong>memory address</strong> of an object (also called a <em>pointer</em> or
+    <em>reference</em>). <span class="inline">PutData</span> doesn't want the object itself —
+    it wants to know <em>where the object lives</em>, so it can keep reading from it as
+    values change. Hence we pass <span class="inline">&amp;_shooterMotor</span>.</p>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">PutData vs PutNumber</div>
+    <p><span class="inline">PutNumber</span> sends a single value. <span class="inline">PutData</span>
+    sends a whole rich object — and because the ICSparkFlex knows how to describe itself,
+    the dashboard will show its target velocity, actual velocity, and all its PIDF gains as
+    editable fields. That's exactly what we need to tune it in Lesson 19.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> When does a constructor run?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">Every 20 milliseconds, like Periodic()</button>
+      <button class="opt" data-correct="true">Once, when the object is first created</button>
+      <button class="opt" data-correct="false">Only when the robot is disabled</button>
+    </div>
+    <div class="explain ok">A constructor runs a single time at creation — ideal for one-time setup like registering the motor with the dashboard, which we don't want to repeat 50 times a second.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What does the <code class="inline">&amp;</code> in <code class="inline">&amp;_shooterMotor</code> do?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Gets the memory address of the object, because PutData wants a pointer, not a copy</button>
+      <button class="opt" data-correct="false">Multiplies the motor's value by two</button>
+      <button class="opt" data-correct="false">Makes the motor run in reverse</button>
+    </div>
+    <div class="explain ok"><code class="inline">&amp;</code> yields the object's memory address. PutData needs to know where the object lives so it can keep reading live values from it.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="16-velocity-control.html"><span class="dir">← Previous</span><span class="ttl">Velocity control</span></a>
+    <a class="next" href="18-flywheel-sim.html"><span class="dir">Next →</span><span class="ttl">Simulating the physics</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

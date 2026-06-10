@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8 · Binding commands to buttons — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="08">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 1 · Your first subsystem</div>
+    <h1>Binding commands to buttons</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 1</span>
+      <span class="pill time">~15 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Pressing the <strong>A button</strong> on an Xbox controller will run your SpinFlywheel command.</p></div>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">RobotContainer connects triggers to commands</div>
+    <p>For a driver to use a subsystem, we hook its commands up to controller buttons.
+    This happens in <strong>RobotContainer</strong> — the part of the code that connects
+    <strong>Triggers</strong> (like the A button) to <strong>Commands</strong> (like
+    SpinFlywheel).</p>
+  </div>
+
+  <h2>Make a controller object</h2>
+  <p>Open <strong>RobotContainer.h</strong>. Add the include up top and create a
+  controller object down the bottom:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/RobotContainer.h">
+<code>
+#include &lt;frc2/command/button/CommandXboxController.h&gt;
+</code>
+  </div>
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/RobotContainer.h">
+<code>
+ private:
+  frc2::CommandXboxController _controller{0};
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Why the input <code class="inline">0</code>?</div>
+    <p>The <span class="inline">0</span> means "the first controller plugged into the
+    computer". Importantly, the count starts at <strong>0, not 1</strong> — something
+    you'll see all over computer code. You can have up to six controllers (IDs 0 to 5).</p>
+  </div>
+
+  <h2>Include the subsystem in the body</h2>
+  <p>Jump to <strong>RobotContainer.cpp</strong> and include your shooter:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/RobotContainer.cpp">
+<code>
+#include "subsystems/SubShooter.h"
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Quotes <code class="inline">" "</code> vs chevrons <code class="inline">&lt; &gt;</code></div>
+    <p>We wrap our own files in <span class="inline">"quotes"</span> and 3rd-party files
+    in <span class="inline">&lt;chevrons&gt;</span>. Both work, but they start searching
+    in different places — quotes search our project's local files first. More usefully,
+    it signals to any reader which files are <em>ours</em> and which come from outside.</p>
+  </div>
+
+  <h2>Bind the command</h2>
+  <p>Inside the existing <span class="inline">ConfigureBindings()</span> function, link
+  SpinFlywheel to the A button:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/RobotContainer.cpp">
+<code>
+void RobotContainer::ConfigureBindings() {
+  _controller.A().WhileTrue(SubShooter::GetInstance().SpinFlywheel());
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">What WhileTrue means</div>
+    <p>This says: <em>while</em> the A button is held true (pressed), run SpinFlywheel.
+    When A is first pressed, the command <strong>starts</strong> (motor → 0.8); when A is
+    released, the command is cancelled and <strong>ends</strong> (motor → 0). That's the
+    StartEnd you wrote in Lesson 6 doing its job.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> If you plugged in a single controller, what ID would it have?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">1, because it's the first one</button>
+      <button class="opt" data-correct="true">0, because controller counting starts at zero</button>
+      <button class="opt" data-correct="false">Any number from 1 to 6</button>
+    </div>
+    <div class="explain ok">Counting starts at 0 in code, so the first controller is ID 0. You can address up to six controllers using IDs 0–5.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why is <code class="inline">"subsystems/SubShooter.h"</code> in quotes, not chevrons?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Because it's a file we created ourselves, not a 3rd-party library</button>
+      <button class="opt" data-correct="false">Because quotes are required for all <code class="inline">.h</code> files</button>
+      <button class="opt" data-correct="false">Because chevrons only work on Windows</button>
+    </div>
+    <div class="explain ok">Quotes are the convention for our own project files; chevrons are for libraries provided from outside. It makes the origin of each file obvious at a glance.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="07-singleton-getinstance.html"><span class="dir">← Previous</span><span class="ttl">Public, private &amp; the Singleton</span></a>
+    <a class="next" href="09-testing-in-simulation.html"><span class="dir">Next →</span><span class="ttl">Testing in simulation</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

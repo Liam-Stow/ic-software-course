@@ -1,0 +1,44 @@
+name: Deploy course to GitHub Pages
+
+# Publishes the static site. The course is plain HTML/CSS/JS at the repo root,
+# so there's nothing to build — we just upload the repo and deploy it.
+
+on:
+  push:
+    branches:
+      - main
+      - claude/frc-interactive-lessons-vk9t06
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; cancel older in-progress runs.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Whole repo root is the site.
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

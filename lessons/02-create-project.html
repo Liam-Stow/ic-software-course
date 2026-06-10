@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2 · Creating your first project — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="02">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 0 · Getting set up</div>
+    <h1>Creating your first project</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 0</span>
+      <span class="pill time">~10 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>You'll have an empty robot project, created from the <strong>Command Robot Skeleton</strong> template, open in WPILib VS Code.</p></div>
+  </div>
+
+  <p class="lead">Open the WPILib copy of VS Code you installed in the last lesson
+  (it may say something like "2025" in the title). We'll use it to generate a fresh
+  project to build on for the rest of the course.</p>
+
+  <h2>Make a new project</h2>
+  <p>Follow the official "Creating a Robot Program" steps, up to and including the
+  <strong>C++ Configurations</strong> step:</p>
+  <div class="resources">
+    <a class="pill" href="https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/creating-benchtop-test-program-cpp-java.html" target="_blank" rel="noopener">📘 Creating a robot program →</a>
+  </div>
+
+  <div class="box project">
+    <div class="box-title">Use these options</div>
+    <p>When the new-project form appears, fill it in like this (the Base Folder and
+    Project Name can be whatever you want):</p>
+    <ul>
+      <li><strong>Project Type:</strong> Template</li>
+      <li><strong>Language:</strong> C++</li>
+      <li><strong>Template:</strong> Command Robot Skeleton (Advanced)</li>
+      <li><strong>Base Folder &amp; Project Name:</strong> your choice</li>
+    </ul>
+  </div>
+
+  <div class="box pitfall">
+    <div class="box-title">Not the "Getting Started" example</div>
+    <p>The official instructions suggest the <em>Getting Started Example</em>. We do
+    something different: we use the <strong>Command Robot Skeleton (Advanced)</strong>
+    template instead. It gives us a clean, empty structure built around
+    <em>commands</em> and <em>subsystems</em> — the way real IC robot code is organised.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Which template should you pick for this course?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">Getting Started Example</button>
+      <button class="opt" data-correct="true">Command Robot Skeleton (Advanced)</button>
+      <button class="opt" data-correct="false">Timed Robot</button>
+    </div>
+    <div class="explain ok">The Command Robot Skeleton gives us the command-based structure IC uses on real robots, which the rest of this course depends on.</div>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">What "command-based" means (preview)</div>
+    <p>Don't worry about the details yet, but the big idea is: we split the robot
+    into <strong>subsystems</strong> (parts with motors and sensors) and describe what
+    they do as <strong>commands</strong> (actions). You'll build your first subsystem
+    in Module 1.</p>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="01-install-wpilib.html"><span class="dir">← Previous</span><span class="ttl">Installing WPILib</span></a>
+    <a class="next" href="03-vendor-libraries-build.html"><span class="dir">Next →</span><span class="ttl">Vendor libraries &amp; building</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

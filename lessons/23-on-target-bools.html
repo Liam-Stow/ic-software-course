@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>23 · Checking when you're on target — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="23">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 5 · Position control: the turret</div>
+    <h1>Checking when you're on target</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 5</span>
+      <span class="pill time">~15 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Each subsystem will have an <strong>AtTarget()</strong> function that <strong>returns true or false</strong> — your first functions that hand back a result.</p></div>
+  </div>
+
+  <p class="lead">Soon we'll automate the whole shoot sequence. Before we can, the robot
+  needs to be able to <strong>ask each subsystem</strong>: "are you on target yet?" — so it
+  can wait for the turret to reach its angle and the shooter to reach its speed before
+  feeding a ball.</p>
+
+  <div class="box concept">
+    <div class="box-title">Functions that return a result</div>
+    <p>Every function so far either returned a <span class="inline">frc2::CommandPtr</span> or
+    nothing at all (<span class="inline">void</span>). <span class="inline">AtTarget()</span>
+    is different — it needs to give back a <strong>yes/no answer</strong>. C++ stores yes/no
+    values in a type called a <strong>bool</strong> (boolean): it's either
+    <span class="inline">true</span> or <span class="inline">false</span>. To make a function
+    return one, write <span class="inline">bool</span> where you'd normally write the return
+    type.</p>
+  </div>
+
+  <h2>Add AtTarget() to the shooter</h2>
+  <p>Declare it in <strong>SubShooter.h</strong> alongside the other functions:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+  void Periodic() override;
+  void SimulationPeriodic() override;
+  bool AtTarget();
+
+  frc2::CommandPtr SpinFlywheel();
+</code>
+  </div>
+
+  <p>Now define it in <strong>SubShooter.cpp</strong>. We could write it the long way with an
+  <span class="inline">if/else</span>:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubShooter.cpp">
+<code>
+bool SubShooter::AtTarget() {
+  if (_shooterMotor.OnVelTarget(20_rpm)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Why a tolerance of 20 RPM?</div>
+    <p>Notice we return true when we're <em>within 20 RPM</em> of the target, not only when
+    we're <em>exactly</em> on it. Hitting an exact speed is almost impossible — the wheel
+    might miss by 0.001 RPM forever. A tolerance of 20 RPM is plenty accurate for an FRC
+    shooter and means <span class="inline">AtTarget()</span> can actually become true.</p>
+  </div>
+
+  <p>Because <span class="inline">OnVelTarget()</span> already returns true or false, the
+  whole <span class="inline">if/else</span> is just passing that value straight through. We
+  can simplify to one line:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubShooter.cpp">
+<code>
+bool SubShooter::AtTarget() {
+  return _shooterMotor.OnVelTarget(20_rpm);
+}
+</code>
+  </div>
+
+  <h2>Add AtTarget() to the turret</h2>
+  <p>Same idea, but the turret cares about <strong>angle</strong>, so it uses
+  <span class="inline">OnPosTarget</span> with a tolerance of 1 degree. Declare
+  <span class="inline">bool AtTarget();</span> in <strong>SubTurret.h</strong>, then:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubTurret.cpp">
+<code>
+bool SubTurret::AtTarget() {
+  return _turretMotor.OnPosTarget(1_deg);
+}
+</code>
+  </div>
+
+  <h2>Send the results to the dashboard</h2>
+  <p>To check they work, publish each subsystem's answer in its
+  <span class="inline">Periodic()</span>:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubTurret.cpp">
+<code>
+void SubTurret::Periodic() {
+  frc::SmartDashboard::PutBoolean("Turret AtTarget", AtTarget());
+}
+</code>
+  </div>
+
+  <div class="box simcheck">
+    <div class="box-title">Test it</div>
+    <ul class="checklist">
+      <li>Simulate and watch the AtTarget booleans on the dashboard.</li>
+      <li>Command the turret to an angle — its boolean flips to true once it settles within 1°.</li>
+      <li>Hold the shoot button — the shooter's boolean flips to true once it's within 20 RPM.</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why return true within a <em>tolerance</em> instead of only at the exact target?</div>
+    <div class="options">
+      <button class="opt" data-correct="true">Hitting the value exactly is essentially impossible, so without tolerance AtTarget would almost never be true</button>
+      <button class="opt" data-correct="false">Tolerance makes the motor spin faster</button>
+      <button class="opt" data-correct="false">Exact comparisons aren't allowed in C++</button>
+    </div>
+    <div class="explain ok">Real mechanisms always miss the exact value by a tiny amount. A sensible tolerance (20 RPM, 1°) lets the check become true while staying accurate enough.</div>
+  </div>
+
+  <div class="fill" data-answer="bool" data-hint="The type that holds true or false.">
+    <div class="q"><span class="qmark">?</span> Fill the blank — the return type for a yes/no function:</div>
+    <div class="prompt-code">______ SubShooter::AtTarget() { ... }</div>
+    <div class="row">
+      <input type="text" placeholder="type the return type">
+      <button class="check" type="button">Check</button>
+      <button class="hintbtn" type="button">Hint</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="22-dcmotor-sim.html"><span class="dir">← Previous</span><span class="ttl">Simulating position</span></a>
+    <a class="next" href="24-command-lifecycle.html"><span class="dir">Next →</span><span class="ttl">The command lifecycle</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

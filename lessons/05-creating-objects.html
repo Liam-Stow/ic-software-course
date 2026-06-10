@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5 · Creating objects in C++ — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="05">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 1 · Your first subsystem</div>
+    <h1>Creating objects in C++</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 1</span>
+      <span class="pill time">~15 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Your SubShooter will <strong>have a motor</strong> — a Spark Flex object that can control a real motor controller.</p></div>
+  </div>
+
+  <h2>How you make an object</h2>
+  <p>Making an object in C++ means writing three things: the <strong>Type</strong> of the
+  object, then a <strong>Name</strong>, then any <strong>inputs</strong> it needs. For
+  example, making an object to represent a pen might look like this:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="example">
+<code>
+Pen myPen{"blue"};
+</code>
+  </div>
+
+  <p>This creates an object of the <span class="inline">Pen</span> type, called
+  <span class="inline">myPen</span>, and gives it the word <span class="inline">"blue"</span>
+  as an input. You might also hear this described as "constructing a Pen object" or
+  just "making a Pen".</p>
+
+  <div class="box concept">
+    <div class="box-title">Types must already exist</div>
+    <p>A type has to exist in your code before you can use it. A few simple types come
+    built in (integers, booleans, characters…), but most useful types need to be
+    <strong>included</strong> from somewhere first. The Spark Flex type lives in Rev's
+    vendor library, so we include it.</p>
+  </div>
+
+  <h2>Add the Spark Flex include</h2>
+  <p>Near the top of <strong>SubShooter.h</strong>, add the highlighted include so the
+  <span class="inline">SparkFlex</span> type is available:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+#pragma once
+
+#include &lt;frc2/command/SubsystemBase.h&gt;
+#include &lt;rev/SparkFlex.h&gt;
+</code>
+  </div>
+
+  <h2>Construct the motor object</h2>
+  <p>Lower down, under the <span class="inline">private:</span> heading, construct the
+  Spark Flex. We'll name ours <strong>_shooterMotor</strong>:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+ private:
+  rev::spark::SparkFlex _shooterMotor{
+      1, rev::spark::SparkLowLevel::MotorType::kBrushless};
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Reading the two inputs</div>
+    <ul>
+      <li><strong>1</strong> is the <strong>CAN ID</strong> — the unique address of this
+      motor controller on the robot's wiring. Each device needs its own ID.</li>
+      <li><strong>kBrushless</strong> tells the Spark Flex that a <em>brushless</em> motor
+      is attached (rather than a brushed one). In IC we almost always use brushless
+      motors.</li>
+    </ul>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Why is it under <code class="inline">private:</code>?</div>
+    <p>The motor object only needs to be used <em>inside</em> SubShooter — no other
+    part of the program should poke at it directly. Keeping it private enforces that.
+    You'll see the matching <span class="inline">public:</span> side in the next lesson.</p>
+  </div>
+
+  <div class="fill" data-answer="kBrushless" data-hint="In IC we almost always use this type of motor — it starts with a lowercase 'k'.">
+    <div class="q"><span class="qmark">?</span> Fill in the blank: what value tells the Spark Flex a brushless motor is attached?</div>
+    <div class="prompt-code">rev::spark::SparkLowLevel::MotorType::______</div>
+    <div class="row">
+      <input type="text" placeholder="type the missing value">
+      <button class="check" type="button">Check</button>
+      <button class="hintbtn" type="button">Hint</button>
+    </div>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> In <code class="inline">SparkFlex _shooterMotor{1, ...}</code>, what is the <strong>1</strong>?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">The motor's power level (1 = full power)</button>
+      <button class="opt" data-correct="true">The CAN ID — this device's unique address on the robot</button>
+      <button class="opt" data-correct="false">How many motors are attached</button>
+    </div>
+    <div class="explain ok">The first input is the CAN ID. Every device on the CAN bus needs a unique ID so the code can talk to the right one. (We'll tidy these IDs into Constants.h in Module 2.)</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="04-what-is-a-subsystem.html"><span class="dir">← Previous</span><span class="ttl">What is a subsystem?</span></a>
+    <a class="next" href="06-functions-and-commands.html"><span class="dir">Next →</span><span class="ttl">Functions &amp; commands</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>7 · Public, private &amp; the Singleton — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="07">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 1 · Your first subsystem</div>
+    <h1>Public, private &amp; the Singleton</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 1</span>
+      <span class="pill time">~10 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Your SubShooter will have a <strong>GetInstance()</strong> function, making it easy to reach from anywhere else in the program. The shooter subsystem will be complete!</p></div>
+  </div>
+
+  <p class="lead">We have one piece of housekeeping left before the shooter is done.
+  Right now nothing outside SubShooter knows how to find it. Let's fix that.</p>
+
+  <h2>Add GetInstance()</h2>
+  <p>Jump back to <strong>SubShooter.h</strong> with <span class="pill">Alt + O</span> and
+  add this function near the top of the <span class="inline">public:</span> section:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+ public:
+  static SubShooter&amp; GetInstance() {
+    static SubShooter inst;
+    return inst;
+  }
+
+  SubShooter();
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">This makes the subsystem a "Singleton"</div>
+    <p>A <strong>Singleton</strong> is a pattern that guarantees there's only ever
+    <em>one</em> of something, and gives everyone a single shared way to get to it.
+    There's only one physical shooter on the robot, so there should only be one
+    SubShooter in code.</p>
+    <p>The full theory is a deep topic — for our purposes,
+    <span class="inline">SubShooter::GetInstance()</span> simply hands back the one and
+    only shooter, from anywhere in the program. You'll use exactly that in the next
+    lesson to bind it to a button.</p>
+  </div>
+
+  <div class="box simcheck">
+    <div class="box-title">The shooter subsystem is complete 🎉</div>
+    <p>It contains a Spark Flex motor controller and can spin and stop. Next we'll let
+    a human driver operate it.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> Why does a subsystem like SubShooter make a good Singleton?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">Because Singletons make code run faster</button>
+      <button class="opt" data-correct="true">There's only one real shooter on the robot, so there should be only one in code, shared everywhere</button>
+      <button class="opt" data-correct="false">Because every function must be static</button>
+    </div>
+    <div class="explain ok">There's a single physical shooter, so a single shared SubShooter object matches reality. GetInstance() gives every part of the program the same one to talk to.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> How will other code get hold of the shooter subsystem?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">By creating a <code class="inline">new SubShooter</code> wherever it's needed</button>
+      <button class="opt" data-correct="true">By calling <code class="inline">SubShooter::GetInstance()</code></button>
+      <button class="opt" data-correct="false">It can't be reached from outside at all</button>
+    </div>
+    <div class="explain ok">Calling <code class="inline">SubShooter::GetInstance()</code> returns the single shared instance. Making your own with <code class="inline">new</code> would create a <em>second</em> shooter, which we don't want.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="06-functions-and-commands.html"><span class="dir">← Previous</span><span class="ttl">Functions &amp; commands</span></a>
+    <a class="next" href="08-binding-buttons.html"><span class="dir">Next →</span><span class="ttl">Binding commands to buttons</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>

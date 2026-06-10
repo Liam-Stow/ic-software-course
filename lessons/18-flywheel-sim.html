@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>18 · Simulating the physics — ICRobotics Course</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body data-lesson="18">
+<header class="topbar">
+  <a class="logo" href="../index.html"><span class="mark">⚙</span> ICRobotics Coding</a>
+  <span class="spacer"></span>
+  <a class="home" href="../index.html">All lessons</a>
+</header>
+
+<main class="wrap content">
+  <div class="lesson-head">
+    <div class="breadcrumb"><a href="../index.html">Course</a> › Module 4 · Smart motor control</div>
+    <h1>Simulating the physics</h1>
+    <div class="lesson-tags">
+      <span class="pill module">Module 4</span>
+      <span class="pill time">~20 min</span>
+    </div>
+  </div>
+
+  <div class="goal">
+    <div class="ic">🎯</div>
+    <div><h2>By the end</h2><p>Your simulated flywheel will actually <strong>spin up</strong>, because you'll model its physics with a <strong>FlywheelSim</strong>.</p></div>
+  </div>
+
+  <p class="lead">On a real robot, voltage goes into the motor and the wheel speeds up
+  according to physics. In simulation there's no real wheel — so we build a little
+  physics model that plays that role.</p>
+
+  <h2>Add the simulation objects to the header</h2>
+  <p>In <strong>SubShooter.h</strong>, add these includes and the simulation members. Also
+  declare <span class="inline">SimulationPeriodic()</span>:</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+#include &lt;frc2/command/SubsystemBase.h&gt;
+#include &lt;frc2/command/Commands.h&gt;
+#include &lt;frc/simulation/FlywheelSim.h&gt;
+#include &lt;frc/system/plant/DCMotor.h&gt;
+#include &lt;frc/system/plant/LinearSystemId.h&gt;
+#include "utilities/ICSparkFlex.h"
+#include "Constants.h"
+</code>
+  </div>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+<code>
+  void Periodic() override;
+  void SimulationPeriodic() override;   // runs every 20ms in simulation only
+
+  bool AtTarget();
+  frc2::CommandPtr SpinFlywheel();
+
+ private:
+  ICSparkFlex _shooterMotor{canid::SHOOTER_MOTOR, 60_A};
+
+  // Physical characteristics of the flywheel, for the simulation
+  static constexpr double GEARING = 1.0;
+  static constexpr units::kilogram_square_meter_t MOI = 0.01_kg_sq_m;
+  static constexpr frc::DCMotor MOTOR_MODEL = frc::DCMotor::NeoVortex(1);
+
+  frc::LinearSystem&lt;1, 1, 1&gt; _flywheelSystem =
+      frc::LinearSystemId::FlywheelSystem(MOTOR_MODEL, MOI, GEARING);
+  frc::sim::FlywheelSim _flywheelSim{_flywheelSystem, MOTOR_MODEL};
+};
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">The new types, in plain English</div>
+    <ul>
+      <li><strong>GEARING</strong> is a <span class="inline">double</span> (a number with
+      decimals). Our flywheel sits straight on the motor, so the ratio is 1.0.</li>
+      <li><strong>MOI</strong> is a <span class="inline">kilogram_square_meter_t</span> —
+      our first value with real units. It's the <em>Moment of Inertia</em>: how hard the
+      wheel is to spin. Heavier/bigger wheels have a higher MOI.</li>
+      <li><strong>MOTOR_MODEL</strong> is a <span class="inline">frc::DCMotor</span>: a
+      maths model of a motor that knows how much torque it makes for a given voltage. We
+      use a NEO Vortex, the motor usually paired with a Spark Flex.</li>
+      <li><strong>_flywheelSystem</strong> is a <span class="inline">frc::LinearSystem</span>
+      that ties the motor model, MOI and gearing together. The <span class="inline">&lt;1,1,1&gt;</span>
+      means one state to control (speed), one input (voltage), one output (speed).</li>
+      <li><strong>_flywheelSim</strong> is the <span class="inline">FlywheelSim</span>
+      itself — the simulated wheel that runs the physics.</li>
+    </ul>
+  </div>
+
+  <h2>Run the simulation every loop</h2>
+  <p>In <strong>SubShooter.cpp</strong>, define <span class="inline">SimulationPeriodic()</span>.
+  This special function runs every 20&nbsp;ms <em>during simulation only</em> (never on a real
+  robot):</p>
+
+  <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/subsystems/SubShooter.cpp">
+<code>
+void SubShooter::SimulationPeriodic() {
+  // Simulate the flywheel mechanism
+  _flywheelSim.SetInputVoltage(_shooterMotor.CalcSimVoltage());
+  _flywheelSim.Update(20_ms);
+  _shooterMotor.IterateSim(_flywheelSim.GetAngularVelocity());
+}
+</code>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">The loop of information</div>
+    <p>Each step does three things:</p>
+    <ol>
+      <li>Ask the Spark how much voltage it's applying, and feed it into the physics sim.</li>
+      <li>Advance the physics sim by 20&nbsp;ms.</li>
+      <li>Ask the sim how fast the wheel is now spinning, and hand that back to the Spark
+      so its PIDF controller has a real measurement to work with.</li>
+    </ol>
+    <p>Spark → voltage → physics → speed → back to Spark. Round and round, 50 times a second.</p>
+  </div>
+
+  <div class="box simcheck">
+    <div class="box-title">Test it</div>
+    <p>Simulate and hold the shoot button. Graph the shooter's <strong>target velocity</strong>
+    and <strong>actual velocity</strong> together. You'll see the target jump to ~17 turns/sec
+    (1000 RPM) — but the actual velocity stays flat at zero. That's the cliffhanger for the
+    next lesson: we haven't tuned the gains yet.</p>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> When does <code class="inline">SimulationPeriodic()</code> run?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">On the real robot, every match</button>
+      <button class="opt" data-correct="true">Every 20ms, but only while running in simulation</button>
+      <button class="opt" data-correct="false">Once at startup</button>
+    </div>
+    <div class="explain ok">It's the simulation-only counterpart to Periodic(). On a real robot the real wheel provides the feedback, so this function isn't used there.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> What does MOI (moment of inertia) describe?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">The motor's maximum voltage</button>
+      <button class="opt" data-correct="true">How hard the wheel is to spin up — higher MOI needs more energy</button>
+      <button class="opt" data-correct="false">The CAN ID of the flywheel</button>
+    </div>
+    <div class="explain ok">Moment of inertia captures how resistant the wheel is to changes in spin. A heavier or larger-radius wheel has a higher MOI and takes more to accelerate.</div>
+  </div>
+
+  <div class="complete-bar">
+    <button class="btn-complete" type="button">Mark this lesson complete</button>
+  </div>
+  <nav class="lesson-nav">
+    <a class="prev" href="17-constructors-dashboard.html"><span class="dir">← Previous</span><span class="ttl">Constructors &amp; the dashboard</span></a>
+    <a class="next" href="19-tuning-pidf.html"><span class="dir">Next →</span><span class="ttl">Tuning PIDF gains</span></a>
+  </nav>
+</main>
+
+<footer class="site">ICRobotics Team 5584 · Interactive Programming Course</footer>
+<script src="../assets/js/lesson.js"></script>
+<script src="../assets/js/progress.js"></script>
+</body>
+</html>
