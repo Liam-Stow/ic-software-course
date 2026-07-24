@@ -170,17 +170,6 @@ main.wrap { padding-bottom: 90px; }
 }
 .lead { font-size: 1.12rem; color: var(--ink-soft); }
 
-/* ---------- Goal banner ---------- */
-.goal {
-  display: flex; gap: 14px; align-items: flex-start;
-  background: linear-gradient(180deg, rgba(243,89,36,.10), rgba(243,89,36,.03));
-  border: 1px solid rgba(243,89,36,.35); border-radius: var(--radius);
-  padding: 16px 18px; margin: 18px 0 8px;
-}
-.goal .ic { font-size: 1.4rem; line-height: 1; }
-.goal h2 { margin: 0 0 4px; font-size: 1rem; text-transform: uppercase; letter-spacing: .05em; color: var(--brand-soft); }
-.goal p { margin: 0; color: var(--ink); }
-
 /* ---------- Callout boxes ---------- */
 .box { border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; padding: 14px 16px; margin: 20px 0; background: var(--panel); }
 .box .box-title { font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
@@ -190,11 +179,13 @@ main.wrap { padding-bottom: 90px; }
 .box.simcheck { border-left-color: var(--good); }
 .box.pitfall  { border-left-color: var(--bad); }
 .box.task     { border-left-color: var(--warn); background: var(--panel-2); }
+.box.goal     { border-left-color: var(--brand); background: linear-gradient(180deg, rgba(243,89,36,.10), rgba(243,89,36,.03)); }
 .box.concept  .box-title::before { content: "💡"; }
 .box.project  .box-title::before { content: "🛠"; }
 .box.simcheck .box-title::before { content: "✅"; }
 .box.pitfall  .box-title::before { content: "⚠️"; }
 .box.task     .box-title::before { content: "🎯"; }
+.box.goal     .box-title::before { content: "🏁"; }
 
 /* ---------- Code blocks ---------- */
 .codeblock { margin: 18px 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--code-bg); }
