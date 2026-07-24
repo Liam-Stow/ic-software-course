@@ -79,10 +79,7 @@ main.wrap { padding-bottom: 90px; }
 .hero { padding: 54px 0 26px; }
 .hero h1 { font-size: 2.4rem; line-height: 1.1; margin: 0 0 14px; }
 .hero p { color: var(--ink-soft); font-size: 1.12rem; max-width: 680px; }
-.hero .kicker {
-  color: var(--brand-soft); font-weight: 700; letter-spacing: .14em;
-  text-transform: uppercase; font-size: .8rem; margin-bottom: 12px;
-}
+
 
 /* ---------- Overall progress ---------- */
 .course-progress {
@@ -118,7 +115,7 @@ main.wrap { padding-bottom: 90px; }
   display: grid; place-items: center; font-weight: 700; font-variant-numeric: tabular-nums;
 }
 .lesson-card .meta { flex: 1; min-width: 0; }
-.lesson-card .meta .t { color: var(--ink); font-weight: 650; }
+.lesson-card .meta .t { color: var(--ink); font-weight: 650; margin-right: 10px; }
 .lesson-card .meta .d { color: var(--ink-faint); font-size: .9rem; }
 .lesson-card .tick {
   flex: none; width: 24px; height: 24px; border-radius: 50%;
