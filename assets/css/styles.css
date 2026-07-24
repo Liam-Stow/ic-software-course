@@ -95,6 +95,18 @@ main.wrap { padding-bottom: 90px; }
 .hero h1 { font-size: 2.4rem; line-height: 1.1; margin: 0 0 14px; }
 .hero p { color: var(--ink-soft); font-size: 1.12rem; max-width: 680px; }
 
+.hero-banner {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; margin-bottom: 26px; background: var(--panel);
+}
+.hero-banner img {
+  display: block; width: 100%; aspect-ratio: 800 / 319;
+  object-fit: cover; object-position: center 60%;
+}
+@media (max-width: 620px) {
+  .hero-banner img { aspect-ratio: 16 / 9; }
+}
+
 
 /* ---------- Overall progress ---------- */
 .course-progress {
