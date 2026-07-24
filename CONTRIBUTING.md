@@ -42,8 +42,7 @@ identical. Each file has:
 2. `<body data-lesson="NN">` — the number drives progress tracking. **It must
    match the filename number and the hub card.**
 3. `.topbar` header (copy verbatim).
-4. `.lesson-head` with breadcrumb (`Module N · Topic`), `<h1>`, and `.lesson-tags`
-   pills (module + estimated time).
+4. `.lesson-head` with breadcrumb (`Module N · Topic`) and `<h1>`.
 5. `.goal` banner: "By the end…" — the one tangible win.
 6. The lesson body (prose, code blocks, boxes, quizzes).
 7. `.complete-bar` with the **Mark complete** button (copy verbatim).
