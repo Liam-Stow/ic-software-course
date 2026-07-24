@@ -94,7 +94,7 @@ main.wrap { padding-bottom: 90px; }
 .btn-reset:hover { color: var(--ink); border-color: var(--ink-faint); }
 
 /* ---------- Modules & lesson cards ---------- */
-.module { margin: 40px 0 8px; }
+.module:not(.pill) { margin: 40px 0 8px; } /* :not(.pill) so this never hits a pill-shaped .module */
 .module > h2 {
   font-size: 1.05rem; text-transform: uppercase; letter-spacing: .12em;
   color: var(--ink-faint); border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 6px;
@@ -129,10 +129,17 @@ main.wrap { padding-bottom: 90px; }
 .breadcrumb { color: var(--ink-faint); font-size: .86rem; margin-bottom: 10px; }
 .breadcrumb a { color: var(--ink-faint); }
 .lesson-head h1 { font-size: 2rem; line-height: 1.15; margin: 6px 0 12px; }
-.lesson-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
-.pill { font-size: .8rem; padding: 4px 11px; border-radius: 99px; border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel); }
-.pill.time::before { content: "⏱ "; }
-.pill.module::before { content: "📦 "; }
+.lesson-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 4px; }
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: .8rem; line-height: 1.4; padding: 4px 11px; border-radius: 99px; border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel); }
+/* Stopwatch icon, drawn as a currentColor mask so it stays crisp, inherits the
+   pill's colour and can't drag the pill's height around. */
+.pill.time::before {
+  content: ""; width: 1.05em; height: 1.05em; flex: none;
+  background: currentColor;
+  --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9.5M9.5 2h5M19.5 6.5l-1.6 1.6'/%3E%3C/svg%3E");
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
 
 /* ---------- Content typography ---------- */
 .content h2 { font-size: 1.4rem; margin: 38px 0 10px; }
