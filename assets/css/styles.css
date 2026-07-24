@@ -1,28 +1,43 @@
 /* ============================================================
    ICRobotics Interactive Programming Course
-   Shared design system. No build step, no external fonts/CDNs.
+   Shared design system, matching 5584 branding:
+     Russo One headings, Roboto body, #191919 ground,
+     #f35924 orange and #7f7f7f grey as the only accents.
+   No build step, no dependencies, no CDNs — the fonts are
+   self-hosted in assets/fonts/, so this all works offline.
    ============================================================ */
 
+@import url("fonts.css");
+
 :root {
-  --bg: #0f1115;
-  --bg-soft: #161922;
-  --panel: #1b1f2a;
-  --panel-2: #212636;
-  --ink: #e7ebf3;
-  --ink-soft: #aab2c5;
-  --ink-faint: #7c869c;
-  --line: #2a3040;
-  --brand: #ff5a1f;       /* IC orange */
-  --brand-soft: #ff7a4d;
-  --accent: #3da9fc;      /* link / info blue */
+  /* Neutral greys, all stepped off the #191919 brand ground */
+  --bg: #191919;
+  --bg-soft: #1f1f1f;
+  --panel: #212121;
+  --panel-2: #2b2b2b;
+  --ink: #f2f2f2;
+  --ink-soft: #b8b8b8;
+  --ink-faint: #7f7f7f;   /* 5584 light grey */
+  --line: #333333;
+  --brand: #f35924;       /* 5584 orange */
+  --brand-soft: #ff7e52;
+  --accent: #f35924;      /* links carry the brand orange */
+  /* Status colours are kept for meaning (right/wrong/careful) only */
   --good: #36d399;
   --bad: #f87272;
   --warn: #fbbd23;
-  --code-bg: #11141b;
+  --code-bg: #121212;
   --radius: 14px;
   --maxw: 860px;
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --display: "Russo One", "Arial Black", Impact, var(--font);
   --mono: "SF Mono", "JetBrains Mono", "Fira Code", "Cascadia Code", Menlo, Consolas, monospace;
+}
+
+/* Russo One ships a single weight — never ask the browser to fake others. */
+h1, h2, h3, .display {
+  font-family: var(--display);
+  font-weight: 400;
 }
 
 * { box-sizing: border-box; }
@@ -51,13 +66,13 @@ site-header {
   display: flex; align-items: center; gap: 14px;
   min-height: 52px;
   padding: 12px 22px;
-  background: rgba(15,17,21,.86);
+  background: rgba(25,25,25,.86);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
 }
 site-header .logo {
   display: inline-flex; align-items: center; gap: 10px;
-  font-weight: 800; letter-spacing: .3px; color: var(--ink);
+  font-family: var(--display); font-weight: 400; letter-spacing: .3px; color: var(--ink);
 }
 site-header .logo .mark {
   width: 26px; height: 26px;
@@ -96,7 +111,7 @@ main.wrap { padding-bottom: 90px; }
 /* ---------- Modules & lesson cards ---------- */
 .module:not(.pill) { margin: 40px 0 8px; } /* :not(.pill) so this never hits a pill-shaped .module */
 .module > h2 {
-  font-size: 1.05rem; text-transform: uppercase; letter-spacing: .12em;
+  font-size: 1.05rem; text-transform: uppercase; letter-spacing: .06em;
   color: var(--ink-faint); border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 6px;
 }
 .module > .module-sub { color: var(--ink-faint); font-size: .95rem; margin: 0 0 14px; }
@@ -115,7 +130,7 @@ main.wrap { padding-bottom: 90px; }
   display: grid; place-items: center; font-weight: 700; font-variant-numeric: tabular-nums;
 }
 .lesson-card .meta { flex: 1; min-width: 0; }
-.lesson-card .meta .t { color: var(--ink); font-weight: 650; margin-right: 10px; }
+.lesson-card .meta .t { color: var(--ink); font-weight: 500; margin-right: 10px; }
 .lesson-card .meta .d { color: var(--ink-faint); font-size: .9rem; }
 .lesson-card .tick {
   flex: none; width: 24px; height: 24px; border-radius: 50%;
@@ -158,19 +173,19 @@ main.wrap { padding-bottom: 90px; }
 /* ---------- Goal banner ---------- */
 .goal {
   display: flex; gap: 14px; align-items: flex-start;
-  background: linear-gradient(180deg, rgba(255,90,31,.10), rgba(255,90,31,.03));
-  border: 1px solid rgba(255,90,31,.35); border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(243,89,36,.10), rgba(243,89,36,.03));
+  border: 1px solid rgba(243,89,36,.35); border-radius: var(--radius);
   padding: 16px 18px; margin: 18px 0 8px;
 }
 .goal .ic { font-size: 1.4rem; line-height: 1; }
-.goal h2 { margin: 0 0 4px; font-size: 1rem; text-transform: uppercase; letter-spacing: .1em; color: var(--brand-soft); }
+.goal h2 { margin: 0 0 4px; font-size: 1rem; text-transform: uppercase; letter-spacing: .05em; color: var(--brand-soft); }
 .goal p { margin: 0; color: var(--ink); }
 
 /* ---------- Callout boxes ---------- */
 .box { border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; padding: 14px 16px; margin: 20px 0; background: var(--panel); }
 .box .box-title { font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
-.box.concept  { border-left-color: var(--accent); }
+.box.concept  { border-left-color: var(--ink-faint); }
 .box.project  { border-left-color: var(--brand); }
 .box.simcheck { border-left-color: var(--good); }
 .box.pitfall  { border-left-color: var(--bad); }
@@ -185,14 +200,14 @@ main.wrap { padding-bottom: 90px; }
 .codeblock { margin: 18px 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--code-bg); }
 .codeblock .cb-head {
   display: flex; align-items: center; gap: 8px;
-  padding: 7px 12px; background: #0c0f15; border-bottom: 1px solid var(--line);
+  padding: 7px 12px; background: #0f0f0f; border-bottom: 1px solid var(--line);
   font-family: var(--mono); font-size: .78rem; color: var(--ink-faint);
 }
-.codeblock .cb-head .dot { width: 10px; height: 10px; border-radius: 50%; background: #333a4a; }
+.codeblock .cb-head .dot { width: 10px; height: 10px; border-radius: 50%; background: #3a3a3a; }
 .codeblock .cb-head .fname { color: var(--ink-soft); }
 .codeblock .cb-head .spacer { flex: 1; }
 .codeblock .cb-head .badge { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; padding: 2px 7px; border-radius: 5px; }
-.codeblock .cb-head .badge.type { background: rgba(255,90,31,.16); color: var(--brand-soft); }
+.codeblock .cb-head .badge.type { background: rgba(243,89,36,.16); color: var(--brand-soft); }
 .codeblock .cb-head .copy-btn { background: none; border: 1px solid var(--line); color: var(--ink-faint); border-radius: 6px; padding: 2px 9px; font-size: .72rem; cursor: pointer; }
 .codeblock .cb-head .copy-btn:hover { color: var(--ink); border-color: var(--ink-faint); }
 .codeblock pre { margin: 0; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 14.5px; line-height: 1.6; }
@@ -206,13 +221,13 @@ main.wrap { padding-bottom: 90px; }
 .codeblock.type { position: relative; }
 .codeblock.type::after {
   content: "type it out — copying is disabled"; position: absolute; right: 10px; bottom: 8px;
-  font-size: .66rem; color: var(--ink-faint); background: rgba(12,15,21,.7); padding: 2px 7px; border-radius: 5px;
+  font-size: .66rem; color: var(--ink-faint); background: rgba(15,15,15,.7); padding: 2px 7px; border-radius: 5px;
   pointer-events: none; opacity: .0; transition: opacity .2s;
 }
 .codeblock.type:hover::after { opacity: .85; }
 
 /* Syntax tokens */
-.tok-com { color: #6b7689; font-style: italic; }
+.tok-com { color: #6f6f6f; font-style: italic; }
 .tok-pre { color: #c792ea; }
 .tok-str { color: #c3e88d; }
 .tok-num { color: #f78c6c; }
@@ -223,8 +238,8 @@ main.wrap { padding-bottom: 90px; }
 
 /* ---------- Quiz ---------- */
 .quiz { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin: 22px 0; background: var(--panel); }
-.quiz .q { font-weight: 650; margin-bottom: 12px; }
-.quiz .q .qmark { color: var(--brand-soft); margin-right: 6px; font-weight: 800; }
+.quiz .q { font-weight: 500; margin-bottom: 12px; }
+.quiz .q .qmark { color: var(--brand-soft); margin-right: 6px; font-weight: 700; }
 .quiz .options { display: grid; gap: 8px; }
 .quiz .opt {
   text-align: left; width: 100%; cursor: pointer;
@@ -236,7 +251,7 @@ main.wrap { padding-bottom: 90px; }
 .quiz .opt[disabled] { cursor: default; }
 .quiz .opt.correct { border-color: var(--good); background: rgba(54,211,153,.12); }
 .quiz .opt.wrong   { border-color: var(--bad); background: rgba(248,114,114,.10); }
-.quiz .opt .marker { float: right; font-weight: 800; }
+.quiz .opt .marker { float: right; font-weight: 700; }
 .quiz .opt.correct .marker::after { content: "✓"; color: var(--good); }
 .quiz .opt.wrong .marker::after   { content: "✗"; color: var(--bad); }
 .quiz .explain { margin-top: 12px; padding: 11px 14px; border-radius: 9px; font-size: .94rem; display: none; }
@@ -246,8 +261,8 @@ main.wrap { padding-bottom: 90px; }
 
 /* ---------- Fill in the blank ---------- */
 .fill { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin: 22px 0; background: var(--panel); }
-.fill .q { font-weight: 650; margin-bottom: 10px; }
-.fill .q .qmark { color: var(--brand-soft); margin-right: 6px; font-weight: 800; }
+.fill .q { font-weight: 500; margin-bottom: 10px; }
+.fill .q .qmark { color: var(--brand-soft); margin-right: 6px; font-weight: 700; }
 .fill .prompt-code { font-family: var(--mono); font-size: 14px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 8px 0; white-space: pre-wrap; color: var(--ink-soft); }
 .fill .row { display: flex; gap: 8px; flex-wrap: wrap; }
 .fill input[type=text] {
@@ -267,7 +282,7 @@ main.wrap { padding-bottom: 90px; }
 /* ---------- Reveal (task solutions) ---------- */
 .reveal { border: 1px dashed var(--line); border-radius: 12px; margin: 20px 0; overflow: hidden; }
 .reveal > summary {
-  cursor: pointer; padding: 14px 16px; font-weight: 650; color: var(--ink-soft);
+  cursor: pointer; padding: 14px 16px; font-weight: 500; color: var(--ink-soft);
   list-style: none; display: flex; align-items: center; gap: 10px; background: var(--panel);
 }
 .reveal > summary::-webkit-details-marker { display: none; }
@@ -290,7 +305,7 @@ main.wrap { padding-bottom: 90px; }
 
 /* ---------- Complete + nav ---------- */
 .complete-bar { margin: 40px 0 10px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); text-align: center; }
-.btn-complete { background: var(--brand); border: none; color: #1a0a02; font-weight: 800; font-size: 1rem; border-radius: 10px; padding: 12px 22px; cursor: pointer; }
+.btn-complete { background: var(--brand); border: none; color: #1a0a02; font-weight: 700; font-size: 1rem; border-radius: 10px; padding: 12px 22px; cursor: pointer; }
 .btn-complete.done { background: var(--good); color: #08231a; }
 .btn-complete:hover { filter: brightness(1.05); }
 
@@ -299,7 +314,7 @@ main.wrap { padding-bottom: 90px; }
 .lesson-nav a:hover { border-color: var(--brand); text-decoration: none; }
 .lesson-nav a.next { text-align: right; }
 .lesson-nav a .dir { display: block; font-size: .76rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .08em; }
-.lesson-nav a .ttl { font-weight: 650; }
+.lesson-nav a .ttl { font-weight: 500; }
 .lesson-nav a.disabled { opacity: .35; pointer-events: none; }
 
 /* ---------- Footer ---------- */

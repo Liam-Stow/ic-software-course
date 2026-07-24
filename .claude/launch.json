@@ -3,8 +3,12 @@
   "configurations": [
     {
       "name": "course",
+      "autoPort": true,
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8123"],
+      "runtimeArgs": [
+        "-c",
+        "import os, http.server, socketserver; socketserver.TCPServer(('', int(os.environ.get('PORT', '8123'))), http.server.SimpleHTTPRequestHandler).serve_forever()"
+      ],
       "port": 8123
     }
   ]

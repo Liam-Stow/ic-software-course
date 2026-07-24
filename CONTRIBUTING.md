@@ -7,9 +7,28 @@ learner should never notice a "seam" between lessons. Read
 ## Ground rules
 
 - **No build step, no dependencies, no CDNs.** Everything must work opened
-  straight from `file://` and offline. Don't add npm, frameworks, web fonts, or
-  external scripts.
+  straight from `file://` and offline. Don't add npm, frameworks, or external
+  scripts. The two brand fonts are already self-hosted in `assets/fonts/` —
+  don't swap them for a Google Fonts `<link>`, and don't add more.
 - **One concept per lesson.** If it needs two, make two lessons.
+
+## Branding
+
+Team 5584's look lives entirely in `assets/css/styles.css`. Use the CSS
+variables — never hard-code a colour in a lesson file.
+
+| Use | Token | Value |
+| --- | --- | --- |
+| Page background | `--bg` | `#191919` |
+| Cards / panels | `--panel`, `--panel-2` | `#212121`, `#2b2b2b` |
+| Body text | `--ink`, `--ink-soft` | `#f2f2f2`, `#b8b8b8` |
+| Accent (primary) | `--brand` | `#f35924` orange |
+| Accent (secondary) | `--ink-faint` | `#7f7f7f` grey |
+
+Headings (`h1`–`h3`) are **Russo One**, body text is **Roboto**. Russo One ships
+one weight only, so never set `font-weight` on a heading. Green, red and amber
+survive in the palette for one job each — right, wrong and careful — in quizzes
+and callout boxes. Don't reach for them as decoration.
 
 ## Anatomy of a lesson
 
