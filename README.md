@@ -1,3 +1,5 @@
+view online: https://liam-stow.github.io/ic-software-course/
+
 # IC Interactive Programming Course
 
 An interactive, browser-based version of the **IC Programming Guide 2025-26** —
