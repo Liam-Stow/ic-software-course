@@ -67,7 +67,6 @@ lessons/
   01-*.html … 27-*.html One file per lesson
 MISSION.md              The pedagogy this course is built on
 CONTRIBUTING.md         How mentors add/edit lessons
-IC Programming Guide 2025-26.pdf   Source of truth for all transcriptions
 ```
 
 ## Contributing

@@ -10,13 +10,11 @@ learner should never notice a "seam" between lessons. Read
   straight from `file://` and offline. Don't add npm, frameworks, web fonts, or
   external scripts.
 - **One concept per lesson.** If it needs two, make two lessons.
-- **Transcribe code faithfully** from `IC Programming Guide 2025-26.pdf`. That PDF
-  is the source of truth.
 
 ## Anatomy of a lesson
 
 Every lesson is a self-contained HTML file in `lessons/`, named
-`NN-short-slug.html`. The fastest way to make a new one is to **copy the nearest
+`NN-name.html`. The fastest way to make a new one is to **copy the nearest
 existing lesson** and edit the body — the surrounding structure must stay
 identical. Each file has:
 
