@@ -316,9 +316,6 @@ main.wrap { padding-bottom: 90px; }
 .lesson-nav a .ttl { font-weight: 500; }
 .lesson-nav a.disabled { opacity: .35; pointer-events: none; }
 
-/* ---------- Footer ---------- */
-footer.site { border-top: 1px solid var(--line); color: var(--ink-faint); font-size: .86rem; padding: 26px 22px; text-align: center; }
-
 /* ---------- Responsive ---------- */
 @media (max-width: 620px) {
   body { font-size: 17px; }
