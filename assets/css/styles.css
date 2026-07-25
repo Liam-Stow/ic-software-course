@@ -91,9 +91,9 @@ site-header .logo.back .mark { transition: transform .15s ease; }
 main.wrap { padding-bottom: 90px; }
 
 /* ---------- Hero (hub) ---------- */
-.hero { padding: 54px 0 26px; }
+.hero { padding: 54px 0 0; }
 .hero h1 { font-size: 2.4rem; line-height: 1.1; margin: 0 0 14px; }
-.hero p { color: var(--ink-soft); font-size: 1.12rem; max-width: 680px; }
+.hero p { color: var(--ink-soft); font-size: 1.12rem; max-width: 680px; margin: 0; }
 
 .hero-banner {
   border: 1px solid var(--line); border-radius: var(--radius);
@@ -110,7 +110,7 @@ main.wrap { padding-bottom: 90px; }
 
 /* ---------- Overall progress ---------- */
 .course-progress {
-  margin: 22px 0 8px; padding: 16px 18px;
+  margin: 26px 0 8px; padding: 16px 18px;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
   display: flex; align-items: center; gap: 16px;
 }
