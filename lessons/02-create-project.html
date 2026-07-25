@@ -26,46 +26,36 @@
 
   <h2>Make a new project</h2>
   <p>Follow the official "Creating a Robot Program" steps, up to and including the
-  <strong>C++ Configurations</strong> step:</p>
-  <a href="https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/creating-benchtop-test-program-cpp-java.html" target="_blank" rel="noopener">📘 Creating a robot program →</a>
+  <strong>C++ Configurations</strong> step:
+  <a href="https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-4/creating-benchtop-test-program-cpp-java.html" target="_blank" rel="noopener">Creating a robot program</a>
+  </p>
 
   <div class="box project">
     <div class="box-title">Use these options</div>
     <p>When the new-project form appears, fill it in like this (the Base Folder and
     Project Name can be whatever you want):</p>
     <ul>
-      <li><strong>Project Type:</strong> Template</li>
-      <li><strong>Language:</strong> C++</li>
+      <li><strong>Project Type:</strong> template</li>
+      <li><strong>Language:</strong> cpp</li>
       <li><strong>Template:</strong> Command Robot Skeleton (Advanced)</li>
       <li><strong>Base Folder &amp; Project Name:</strong> your choice</li>
+      <li><strong>Team Number:</strong> 5584</li>
+      <li><strong>Enable Desktop Support:</strong> Yes</li>
+      <img src="../assets/img/02-projSettings.png" alt="New project form filled in with the correct options">
     </ul>
   </div>
 
   <div class="box pitfall">
     <div class="box-title">Not the "Getting Started" example</div>
-    <p>The official instructions suggest the <em>Getting Started Example</em>. We do
-    something different: we use the <strong>Command Robot Skeleton (Advanced)</strong>
-    template instead. It gives us a clean, empty structure built around
-    <em>commands</em> and <em>subsystems</em> — the way real IC robot code is organised.</p>
+    <p>The official instructions suggest the <em>Getting Started Example</em>. We use the 
+    <strong>Command Robot Skeleton (Advanced)</strong> template instead. It gives us a clean, 
+    empty structure built around <em>commands</em> and <em>subsystems</em>.</p>
   </div>
 
-  <div class="quiz">
-    <div class="q"><span class="qmark">?</span> Which template should you pick for this course?</div>
-    <div class="options">
-      <button class="opt" data-correct="false">Getting Started Example</button>
-      <button class="opt" data-correct="true">Command Robot Skeleton (Advanced)</button>
-      <button class="opt" data-correct="false">Timed Robot</button>
-    </div>
-    <div class="explain ok">The Command Robot Skeleton gives us the command-based structure IC uses on real robots, which the rest of this course depends on.</div>
-  </div>
-
-  <div class="box concept">
-    <div class="box-title">What "command-based" means (preview)</div>
-    <p>Don't worry about the details yet, but the big idea is: we split the robot
-    into <strong>subsystems</strong> (parts with motors and sensors) and describe what
-    they do as <strong>commands</strong> (actions). You'll build your first subsystem
-    in Module 1.</p>
-  </div>
+  <p>
+  Once your project is created and opened, you may see the a task begin to execute in the bottom terminal to build your project.
+  This is normal and may take a couple of minutes, you should see a message that says <strong>BUILD SUCCESSFUL</strong> when it finishes.
+  </p>
 
   <div class="complete-bar">
     <button class="btn-complete" type="button">Mark this lesson complete</button>

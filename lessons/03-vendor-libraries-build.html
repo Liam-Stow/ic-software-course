@@ -17,14 +17,14 @@
 
   <div class="box goal">
     <div class="box-title">By the end</div>
-    <p>You'll have installed the <strong>RevLib</strong> vendor library and seen your code <strong>BUILD SUCCESSFUL</strong> for the first time.</p>
+    <p>You'll have installed the <strong>RevLib</strong> vendor library and know how to build your code.</p>
   </div>
 
   <div class="box concept">
     <div class="box-title">What's a vendor library?</div>
     <p>To control hardware like a motor, we usually need code that the hardware's
     manufacturer provides. This is called a <strong>library</strong> or
-    <strong>dependency</strong>. For this course we'll install just one:
+    <strong>dependency</strong>. For our first project, we'll install just one:
     <strong>RevLib</strong>, from Rev Robotics. It lets us drive their Spark motor
     controllers, which IC uses a lot.</p>
   </div>
@@ -32,23 +32,29 @@
   <h2>Install RevLib</h2>
   <ol>
     <li>In the VS Code sidebar, open the <strong>WPILib Vendor Dependencies</strong> tab.</li>
+    <li>Hit refresh in the top right corer of the sidebar if you don't see any options.</li>
     <li>Find <strong>REVLib</strong> in the list and install it with the blue button.</li>
   </ol>
+  <img src="../assets/img/03-vendors.png" alt="The WPILib Vendor Dependencies tab, with REVLib highlighted and the install button visible.">
 
   <h2>Build your code</h2>
-  <p>To check the install worked, we'll <strong>build</strong> the project. Building
-  converts your human-readable code into machine-readable instructions.</p>
+  <p>After installing the libary, a <strong>build</strong> is usually automatically started in the terminal 
+    at the bottom to check the install worked. Building converts your human-readable code into 
+    machine-readable instructions. Wait a minute to see the build complete.</p> 
+  <p>We can also run builds ourselves. To see this in action:</p>
+    
   <ol>
     <li>Open VS Code's command palette with <span class="pill">Ctrl + Shift + P</span>.</li>
     <li>Run the <span class="pill">WPILib: Build Robot Code</span> command.</li>
   </ol>
+  <img src="../assets/img/03-build.png" alt="The command palette open, with the WPILib: Build Robot Code command highlighted.">
 
   <div class="box simcheck">
     <div class="box-title">You're done when…</div>
     <ul class="checklist">
       <li>A terminal opens at the bottom of the screen and runs a build process.</li>
       <li>It eventually prints <strong>BUILD SUCCESSFUL</strong> in green.</li>
-      <li>(This can take several minutes the first time — that's normal.)</li>
+      <li>This time should be fast, because it is leaning on the previous build, but this can take several minutes if there are real code changes to build.</li>
     </ul>
   </div>
 
@@ -70,7 +76,35 @@
     if you're stuck.</p>
   </div>
 
-  <p>That's the whole setup done. From here on, it's all about writing code. 🎉</p>
+  <h2>Faster Builds</h2>
+  <p>During your build, you may have seen several "compileFrcUserProgram..." lines. Each of these indicates a seperate version of the code being built. 
+    Below we can see versions for Debug, Release, Test, Windows and Linux. 
+  </p>
+  <img src="../assets/img/03-multiBuild.png" alt="The terminal output of a build, with several compileFrcUserProgram lines highlighted.">
+  <p>The build process can be sped up by only building the version you need. There is no VS Code command pallet option to do this, but
+    you can run the build from the terminal with a command like <code>./gradlew frcUserProgramWindowsx86-64DebugExecutable</code>. This
+    will only build the Debug version for Windows, which is what we need to run the simulator and will be much faster.
+  </p>
+  <p>Run <code>./gradlew tasks</code> in the terminal to see all options for targeted builds (and much more!).</p>
+  <p>Here you can see a clean (not relying on previous builds) build of just the windows debug version taking 9 seconds, and the full build 
+    taking over a minute.
+  </p>
+  <img src="../assets/img/03-fastBuild.png" alt="Two terminal outputs of builds, one with a full build taking over a minute, and one with a single build taking 9 seconds.">
+
+  <div class="quiz">
+    <div class="q"><span class="qmark">?</span> When should you do a full build vs just the version you need?</div>
+    <div class="options">
+      <button class="opt" data-correct="false">Always do a full build, just in case.</button>
+      <button class="opt" data-correct="true">Build just the version you need most of the time. Full build only occasionally to see if every platform builds ok.</button>
+      <button class="opt" data-correct="false">Do a full build before deploying to the real robot.</button>
+      <div class="explain ok">Building only the version of your code you need can save a lot of time, especially if you are making frequent, small changes.</div>
+    </div>
+  </div>
+
+  <div class="box concept">
+    <div class="box-title">Frequent Builds</div>
+    <p>In the terminal, you can press the up arrow on your keyobard to re-enter the previous command. This is useful for frequently re-running a targeted build command.</p>
+  </div>
 
   <div class="complete-bar">
     <button class="btn-complete" type="button">Mark this lesson complete</button>

@@ -170,6 +170,12 @@ main.wrap { padding-bottom: 90px; }
 /* Inline keycaps, UI labels and doc links inside lesson bodies. */
 .pill { display: inline-flex; align-items: center; gap: 5px; font-size: .8rem; line-height: 1.4; padding: 4px 11px; border-radius: 99px; border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel); }
 
+/* Screenshots dropped into lesson bodies. */
+.content img {
+  display: block; max-width: 100%; margin: 18px 0;
+  border: 1px solid var(--line); border-radius: 10px;
+}
+
 /* ---------- Callout boxes ---------- */
 .box { border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; padding: 14px 16px; margin: 20px 0; background: var(--panel); }
 .box .box-title { font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
