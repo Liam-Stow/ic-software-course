@@ -17,20 +17,23 @@
 
   <div class="box goal">
     <div class="box-title">By the end</div>
-    <p>You'll have created an empty <strong>SubShooter</strong> subsystem and understand the split between its <strong>header (.h)</strong> and <strong>body (.cpp)</strong> files.</p>
+    <p>You'll have created an empty <strong>SubShooter</strong> subsystem and understand the split between its <strong>header</strong> and <strong>body</strong> files.</p>
   </div>
 
   <p>Our goal for this whole module is to run a ball <strong>shooter</strong>:
   a large wheel (a <em>flywheel</em>) that spins up fast, so that a ball pushed into
   it gets fired toward a goal. Shooting is one of the most common problems in FRC.</p>
-
-  <div class="box concept">
-    <div class="box-title">What's a subsystem?</div>
-    <p>A <strong>subsystem</strong> is a part of the robot with its own motors, sensors
-    and structural bits — like a shooter, an arm, or a drivebase. We organise our
-    code into subsystems so each part stays self-contained and easy to reason about.
-    Our shooter will be a subsystem.</p>
+  <div class="img-row">
+    <img src="../assets/img/04-shooter1.webp" alt="An example shooter subsystem.">
+    <img src="../assets/img/04-shooter2.webp" alt="An example shooter subsystem.">
+    <div class="video-embed">
+      <iframe src="https://www.youtube-nocookie.com/embed/eFqkIQy_8Hw" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
   </div>
+
+    <p>The shooter is a <a href="https://docs.wpilib.org/en/stable/docs/software/commandbased/subsystems.html" target="_blank" rel="noopener">subsystem</a>, 
+    which is a part of the robot with its own actuators, sensors and structural components. 
+    We organise our code into subsystems, so let's make one for the shooter.</p>
 
   <h2>Make folders for subsystems</h2>
   <p>In VS Code's file explorer (left side):</p>
@@ -38,9 +41,13 @@
     <li>Right-click the <span class="pill">cpp</span> folder under <span class="pill">src/main</span> → <strong>New Folder…</strong> → name it <strong>subsystems</strong>.</li>
     <li>Do the same under <span class="pill">src/main/include</span> — another <strong>subsystems</strong> folder.</li>
   </ol>
+  <img src="../assets/img/04-folders.png" alt="The new subsystems folders in VS Code.">
 
   <h2>Create the subsystem</h2>
   <p>Right-click <span class="pill">src/main/cpp/subsystems</span> → <strong>Create a new class/command</strong> → choose <strong>Subsystem</strong>. Name it <strong>SubShooter</strong>.</p>
+  <img src="../assets/img/04-newClass.png" alt="Creating a new subsystem in VS Code.">
+  <img src="../assets/img/04-sub.png" alt="Naming the new subsystem SubShooter.">
+  <img src="../assets/img/04-subShooter.png" alt="The new SubShooter subsystem files.">
 
   <div class="box concept">
     <div class="box-title">Naming convention</div>
@@ -52,14 +59,14 @@
   <h2>Two files, one subsystem</h2>
   <p>VS Code created two files. They are two halves of the same subsystem:</p>
   <ul>
-    <li><strong>SubShooter.h</strong> — the <strong>header</strong>. Here we <em>declare</em> what the subsystem <strong>has</strong> and <strong>can do</strong>.</li>
-    <li><strong>SubShooter.cpp</strong> — the <strong>body</strong>. Here we <em>define</em> <strong>how</strong> it does those things.</li>
+    <li><strong>SubShooter.h</strong> — the <strong>header</strong>. Here we declare <strong>what</strong> the subsystem has and can do.</li>
+    <li><strong>SubShooter.cpp</strong> — the <strong>body</strong>. Here we define <strong>how</strong> it does those things.</li>
   </ul>
   <p>With your cursor in one file, press <span class="pill">Alt + O</span> to jump to its
   partner. Press it again to swap back — you'll use this constantly.</p>
 
   <p>Here's the empty header VS Code generated for you:</p>
-  <div class="codeblock type" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
+  <div class="codeblock" data-lang="cpp" data-file="src/main/include/subsystems/SubShooter.h">
 <code>
 #pragma once
 
