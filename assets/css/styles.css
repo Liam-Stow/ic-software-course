@@ -288,13 +288,6 @@ main.wrap { padding-bottom: 90px; }
 .checklist li { display: flex; gap: 10px; align-items: flex-start; margin: 7px 0; }
 .checklist li::before { content: "☐"; color: var(--ink-faint); font-size: 1.1em; line-height: 1.4; }
 
-/* ---------- Resources / links ---------- */
-.resources { margin: 22px 0; }
-.resources a { display: inline-block; }
-.resource-list { list-style: none; padding: 0; }
-.resource-list li { padding: 8px 0; border-bottom: 1px solid var(--line); }
-.resource-list li::before { content: "🔗 "; }
-
 /* ---------- Complete + nav ---------- */
 .complete-bar { margin: 40px 0 10px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); text-align: center; }
 .btn-complete { background: var(--brand); border: none; color: #1a0a02; font-weight: 700; font-size: 1rem; border-radius: 10px; padding: 12px 22px; cursor: pointer; }

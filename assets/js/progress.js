@@ -24,7 +24,7 @@
     function render() {
       var isDone = !!done[id];
       btn.classList.toggle("done", isDone);
-      btn.textContent = isDone ? "✓ Lesson complete — click to undo" : "Mark this lesson complete";
+      btn.textContent = isDone ? "Lesson complete" : "Mark this lesson complete";
     }
     btn.addEventListener("click", function () {
       done = getDone();
