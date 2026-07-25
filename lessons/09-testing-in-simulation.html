@@ -49,14 +49,16 @@ void SubShooter::Periodic() {
     <span class="inline">"shooter speed"</span>, equal to
     <span class="inline">_shooterMotor.Get()</span>.</p>
     <p><span class="inline">.Get()</span> returns how much power is being sent to the
-    motor, from 0.0 (still) to 1.0 (full power). So at 80% power it reports 0.8. If the
-    motor were at 50%, this line would effectively be:</p>
-  </div>
-
-  <div class="codeblock type" data-lang="cpp" data-file="don't actually write this — just to show what's happening">
+    motor, from 0.0 (still) to 1.0 (full power). So at 80% power it reports 0.8.</p>
+      <div class="codeblock" data-lang="cpp" data-file="don't actually write this, it's just to show what's happening">
 <code>
+frc::SmartDashboard::PutNumber("shooter speed", _shooterMotor.Get());
+// If the motor were at 50%, this line would effectively be:
 frc::SmartDashboard::PutNumber("shooter speed", 0.5);
 </code>
+  </div>
+
+
   </div>
 
   <div class="box concept">
@@ -70,30 +72,47 @@ frc::SmartDashboard::PutNumber("shooter speed", 0.5);
   <ol>
     <li>Open the command palette: <span class="pill">Ctrl + Shift + P</span>.</li>
     <li>Run <span class="pill">WPILib: Simulate Robot Code</span>.</li>
-    <li>When asked, tick <strong>Sim GUI</strong> and continue.</li>
+    <img src="../assets/img/09-sim.png" alt="Command palette with 'simulate' typed in">
+    <li>When asked, tick <strong>Sim GUI</strong> and OK.</li>
+    <img src="../assets/img/09-gui.png" alt="Sim GUI selected in the list of simulators">
   </ol>
 
-  <div class="box project">
-    <div class="box-title">Drive the simulation</div>
-    <ol>
-      <li>In the Sim GUI, drag your keyboard/controller from <strong>System Joysticks</strong>
-      into the <strong>Joysticks</strong> panel (slot 0).</li>
-      <li>Set <strong>Robot State</strong> to <strong>Teleoperated</strong>.</li>
-      <li>Find <strong>shooter speed</strong> in the <em>SmartDashboard</em> or
-      <em>NetworkTables</em> panel.</li>
-      <li>Press the key mapped to the A button and watch the value jump to <strong>0.8</strong>;
-      release it and watch it fall back to <strong>0</strong>.</li>
-    </ol>
-  </div>
+  <p>Check <a href="https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/simulation-gui.html" target="_blank">here</a> for an overview of the simulator, you will need to follow the 
+  <a href="https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/simulation-gui.html#using-the-keyboard-as-a-joystick" target="_blank">Using keyboard as joystick</a> section of that tutorial if you don't have an xbox 
+  controller at home, or the <a href="https://docs.wpilib.org/en/stable/docs/software/wpilib-tools/robot-simulation/simulation-gui.html#adding-a-system-joystick-to-joysticks" target="_blank">Adding a System Joystick to Joysticks</a> section if 
+  you do.</p>
+  <p>If you can't find a window or section mentioned in the instructions, you may 
+  need to add it from the title bar. For example, you will need to click DS > 
+  Joysticks to bring up the Joysticks window. </p>
+  <img src="../assets/img/09-DS.png" alt="add the Joysticks window from the DS menu">
+
+  <p>Once your joystick is added, click Teleoperated in the Robot State window at the top left.</p>
+  <img src="../assets/img/09-teleop.png" alt="click Teleoperated in the Robot State window">
+  
+  <p>If you have a real XBox controller plugged in, press A. If you are using a 
+  keyboard, click the button on your keyboard assigned to the A button on an 
+  XboxController, by default this is the Z key. Then scroll down in the 
+  NetworkTables view. Under SmartDashboard you will see your shooter 
+  power!</p>
+  <p>When the xbox controller's A button (probably the Z key on your keyboard) 
+  is pressed, the shooter power increases to 0.8 (80%) and when it is 
+  released, the power drops to 0.</p>
+  <img src="../assets/img/09-speed.png" alt="shooter speed on the dashboard">
 
   <div class="box simcheck">
     <div class="box-title">Success looks like</div>
     <ul class="checklist">
       <li>"shooter speed" reads 0 at rest.</li>
-      <li>Holding A makes it read 0.8.</li>
-      <li>Releasing A returns it to 0.</li>
+      <li>Holding A on the controller (or Z on keyboard) makes it read 0.8.</li>
+      <li>Releasing the button returns it to 0.</li>
     </ul>
   </div>
+
+  <p>Try following this <a href="https://docs.wpilib.org/en/stable/docs/software/dashboards/glass/plots.html" target="_blank">guide</a> 
+  to make a graph out of your shooter power: </p>
+  <img src="../assets/img/09-graph.png" alt="shooter speed graph on the dashboard">
+
+  
 
   <div class="quiz">
     <div class="q"><span class="qmark">?</span> What does <code class="inline">_shooterMotor.Get()</code> return?</div>
@@ -103,13 +122,6 @@ frc::SmartDashboard::PutNumber("shooter speed", 0.5);
       <button class="opt" data-correct="false">The CAN ID of the motor</button>
     </div>
     <div class="explain ok"><code class="inline">.Get()</code> returns the commanded power, from 0.0 (still) to 1.0 (full forward). That's why the dashboard shows 0.8 while you hold A.</div>
-  </div>
-
-  <div class="box concept">
-    <div class="box-title">Bonus: graph it</div>
-    <p>You can right-click the "shooter speed" value in the Sim GUI and add it to a
-    graph to watch it change over time. We'll lean on graphs heavily when tuning the
-    flywheel in Module 4.</p>
   </div>
 
   <div class="complete-bar">

@@ -23,7 +23,7 @@
   <div class="box concept">
     <div class="box-title">RobotContainer connects triggers to commands</div>
     <p>For a driver to use a subsystem, we hook its commands up to controller buttons.
-    This happens in <strong>RobotContainer</strong> — the part of the code that connects
+    This happens in <strong>RobotContainer</strong>, the part of the code that connects
     <strong>Triggers</strong> (like the A button) to <strong>Commands</strong> (like
     SpinFlywheel).</p>
   </div>
@@ -34,7 +34,10 @@
 
   <div class="codeblock type" data-lang="cpp" data-file="src/main/include/RobotContainer.h">
 <code>
+#pragma once
+
 #include &lt;frc2/command/button/CommandXboxController.h&gt;
+#include &lt;frc2/command/CommandPtr.h&gt;
 </code>
   </div>
   <div class="codeblock type" data-lang="cpp" data-file="src/main/include/RobotContainer.h">
@@ -47,12 +50,12 @@
   <div class="box concept">
     <div class="box-title">Why the input <code class="inline">0</code>?</div>
     <p>The <span class="inline">0</span> means "the first controller plugged into the
-    computer". Importantly, the count starts at <strong>0, not 1</strong> — something
+    computer". Importantly, the count starts at <strong>0, not 1</strong>, something
     you'll see all over computer code. You can have up to six controllers (IDs 0 to 5).</p>
   </div>
 
   <h2>Include the subsystem in the body</h2>
-  <p>Jump to <strong>RobotContainer.cpp</strong> and include your shooter:</p>
+  <p>Jump to <strong>RobotContainer.cpp</strong> and include your shooter near the top:</p>
 
   <div class="codeblock type" data-lang="cpp" data-file="src/main/cpp/RobotContainer.cpp">
 <code>
@@ -64,8 +67,8 @@
     <div class="box-title">Quotes <code class="inline">" "</code> vs chevrons <code class="inline">&lt; &gt;</code></div>
     <p>We wrap our own files in <span class="inline">"quotes"</span> and 3rd-party files
     in <span class="inline">&lt;chevrons&gt;</span>. Both work, but they start searching
-    in different places — quotes search our project's local files first. More usefully,
-    it signals to any reader which files are <em>ours</em> and which come from outside.</p>
+    in different places. Quotes search our project's local files first which is minutely more efficient. 
+    More importantly though, it signals to any reader which files are <em>ours</em> and which come from outside.</p>
   </div>
 
   <h2>Bind the command</h2>
@@ -83,19 +86,8 @@ void RobotContainer::ConfigureBindings() {
   <div class="box concept">
     <div class="box-title">What WhileTrue means</div>
     <p>This says: <em>while</em> the A button is held true (pressed), run SpinFlywheel.
-    When A is first pressed, the command <strong>starts</strong> (motor → 0.8); when A is
-    released, the command is cancelled and <strong>ends</strong> (motor → 0). That's the
-    StartEnd you wrote in Lesson 6 doing its job.</p>
-  </div>
-
-  <div class="quiz">
-    <div class="q"><span class="qmark">?</span> If you plugged in a single controller, what ID would it have?</div>
-    <div class="options">
-      <button class="opt" data-correct="false">1, because it's the first one</button>
-      <button class="opt" data-correct="true">0, because controller counting starts at zero</button>
-      <button class="opt" data-correct="false">Any number from 1 to 6</button>
-    </div>
-    <div class="explain ok">Counting starts at 0 in code, so the first controller is ID 0. You can address up to six controllers using IDs 0–5.</div>
+    When A is first pressed, the command <strong>starts</strong> (setting the motor to 0.8 power).
+    When A is released, the command is cancelled and <strong>ends</strong> (setting the motor to 0 power).</p>
   </div>
 
   <div class="quiz">
@@ -105,7 +97,7 @@ void RobotContainer::ConfigureBindings() {
       <button class="opt" data-correct="false">Because quotes are required for all <code class="inline">.h</code> files</button>
       <button class="opt" data-correct="false">Because chevrons only work on Windows</button>
     </div>
-    <div class="explain ok">Quotes are the convention for our own project files; chevrons are for libraries provided from outside. It makes the origin of each file obvious at a glance.</div>
+    <div class="explain ok">Quotes are the convention for our own project files. Chevrons are for libraries provided from outside. It makes the origin of each file obvious at a glance.</div>
   </div>
 
   <div class="complete-bar">
