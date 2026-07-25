@@ -244,7 +244,7 @@ main.wrap { padding-bottom: 90px; }
 .quiz .opt.correct { border-color: var(--good); background: rgba(54,211,153,.12); }
 .quiz .opt.wrong   { border-color: var(--bad); background: rgba(248,114,114,.10); }
 .quiz .opt .marker { float: right; font-weight: 700; }
-.quiz .opt.correct .marker::after { content: "✓"; color: var(--good); }
+.quiz .opt.correct .marker::after { content: "✔"; color: var(--good); }
 .quiz .opt.wrong .marker::after   { content: "✗"; color: var(--bad); }
 .quiz .explain { margin-top: 12px; padding: 11px 14px; border-radius: 9px; font-size: .94rem; display: none; }
 .quiz .explain.show { display: block; }

@@ -166,7 +166,7 @@
         feedback.classList.add("show");
         feedback.classList.remove("ok", "no");
         feedback.classList.add(ok ? "ok" : "no");
-        feedback.textContent = ok ? "✓ Nice — that's it." :
+        feedback.textContent = ok ? "✔ Nice — that's it." :
           "Not quite. " + (hint ? "Hint: " + hint : "Check your spelling and punctuation.");
       }
       checkBtn && checkBtn.addEventListener("click", check);
