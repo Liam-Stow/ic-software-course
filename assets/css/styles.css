@@ -169,7 +169,6 @@ main.wrap { padding-bottom: 90px; }
 }
 /* Inline keycaps, UI labels and doc links inside lesson bodies. */
 .pill { display: inline-flex; align-items: center; gap: 5px; font-size: .8rem; line-height: 1.4; padding: 4px 11px; border-radius: 99px; border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel); }
-.lead { font-size: 1.12rem; color: var(--ink-soft); }
 
 /* ---------- Callout boxes ---------- */
 .box { border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; padding: 14px 16px; margin: 20px 0; background: var(--panel); }
