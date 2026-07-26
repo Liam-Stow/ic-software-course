@@ -1,8 +1,25 @@
 /* ============================================================
    ICRobotics Interactive Programming Course
    Shared design system, matching 5584 branding:
-     Russo One headings, Roboto body, #191919 ground,
-     #f35924 orange and #7f7f7f grey as the only accents.
+     Russo One page titles, Roboto everywhere else,
+     #f35924 orange as the only accent.
+
+   The look is deliberately quiet: style earns its place only by
+   separating things. Structure comes from hairlines, space and a
+   single left rule — never from a filled, rounded card. Orange is
+   a pointer (where you are, where you're going), not decoration.
+
+   LIGHT + DARK
+   Every colour is declared once, as light-dark(<light>, <dark>).
+   Which side wins is decided by `color-scheme`:
+     - :root defaults to `light dark`, i.e. follow the OS.
+     - [data-theme] pins it, and is set by the header toggle
+       (assets/js/site.js) and the no-flash snippet in each page's
+       <head>.
+   Each custom property has a plain dark value declared just above
+   the light-dark() one, so a browser too old for light-dark()
+   simply drops that line and keeps the original dark site.
+
    No build step, no dependencies, no CDNs — the fonts are
    self-hosted in assets/fonts/, so this all works offline.
    ============================================================ */
@@ -10,35 +27,78 @@
 @import url("fonts.css");
 
 :root {
-  /* Neutral greys, all stepped off the #191919 brand ground */
-  --bg: #191919;
-  --bg-soft: #1f1f1f;
-  --panel: #212121;
-  --panel-2: #2b2b2b;
-  --ink: #f2f2f2;
-  --ink-soft: #b8b8b8;
-  --ink-faint: #7f7f7f;   /* 5584 light grey */
-  --line: #333333;
-  --brand: #f35924;       /* 5584 orange */
-  --brand-soft: #ff7e52;
-  --accent: #f35924;      /* links carry the brand orange */
-  /* Status colours are kept for meaning (right/wrong/careful) only */
-  --good: #36d399;
-  --bad: #f87272;
-  --warn: #fbbd23;
-  --code-bg: #121212;
-  --radius: 14px;
-  --maxw: 860px;
+  color-scheme: light dark;
+
+  /* Ground and panels */
+  --bg:        #121416;  --bg:        light-dark(#ffffff, #121416);
+  --bg-soft:   #171a1c;  --bg-soft:   light-dark(#f6f5f2, #171a1c);
+  --panel-2:   #1c1f22;  --panel-2:   light-dark(#f1efeb, #1c1f22);
+  --code-bg:   #0c0e10;  --code-bg:   light-dark(#f7f6f3, #0c0e10);
+
+  /* Type */
+  --ink:       #e9ebec;  --ink:       light-dark(#16181a, #e9ebec);
+  --ink-str:   #ffffff;  --ink-str:   light-dark(#000000, #ffffff);
+  --ink-soft:  #a6acb1;  --ink-soft:  light-dark(#4a4e53, #a6acb1);
+  /* --ink-faint carries real content (lesson descriptions, module
+     subtitles), so both sides clear 4.5:1 against their ground. */
+  --ink-faint: #7d858c;  --ink-faint: light-dark(#696e73, #7d858c);
+
+  /* Rules — the main structural device */
+  --line:      #24282b;  --line:      light-dark(#e2e0da, #24282b);
+  --line-hot:  #363c41;  --line-hot:  light-dark(#c5c2ba, #363c41);
+
+  /* 5584 orange, darkened on light ground so it stays legible */
+  --brand:      #f35924; --brand:      light-dark(#d1470f, #f35924);
+  --brand-soft: #ff8355; --brand-soft: light-dark(#b93d09, #ff8355);
+  --accent:     #f35924; --accent:     light-dark(#b93d09, #f35924);
+  --on-brand:   #140600; --on-brand:   light-dark(#ffffff, #140600);
+
+  /* Status colours carry meaning (right / wrong / careful) only */
+  --good:      #4ec98a;  --good:      light-dark(#16794f, #4ec98a);
+  --bad:       #ff7a7a;  --bad:       light-dark(#b3261e, #ff7a7a);
+  --warn:      #e0b23f;  --warn:      light-dark(#8a6100, #e0b23f);
+
+  /* Syntax tokens */
+  --tok-com: #7f868c;    --tok-com: light-dark(#6e6c64, #7f868c);
+  --tok-pre: #c792ea;    --tok-pre: light-dark(#6b3fa0, #c792ea);
+  --tok-str: #a5d6a7;    --tok-str: light-dark(#1f6b3a, #a5d6a7);
+  --tok-num: #f78c6c;    --tok-num: light-dark(#a84a08, #f78c6c);
+  --tok-kw:  #82aaff;    --tok-kw:  light-dark(#14459c, #82aaff);
+  --tok-typ: #ffcb6b;    --tok-typ: light-dark(#8a5a00, #ffcb6b);
+  --tok-fn:  #82d9ff;    --tok-fn:  light-dark(#0a5f78, #82d9ff);
+  --tok-op:  #a6acb1;    --tok-op:  light-dark(#4a4e53, #a6acb1);
+
+  /* light-dark() only works on colours, so these two ride along
+     as plain variables, set in the two blocks below. */
+  --img-filter: none;
+  --logo-filter: none;
+
+  --maxw: 740px;
   --font: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --display: "Russo One", "Arial Black", Impact, var(--font);
   --mono: "SF Mono", "JetBrains Mono", "Fira Code", "Cascadia Code", Menlo, Consolas, monospace;
 }
 
-/* Russo One ships a single weight — never ask the browser to fake others. */
-h1, h2, h3, .display {
-  font-family: var(--display);
-  font-weight: 400;
+/* The team logo is a white PNG and the hero photo is very dark;
+   both need help on a white page. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --img-filter: grayscale(.3) contrast(1.03);
+    --logo-filter: invert(1);
+  }
 }
+:root[data-theme="light"] {
+  color-scheme: light;
+  --img-filter: grayscale(.3) contrast(1.03);
+  --logo-filter: invert(1);
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* Russo One ships a single weight — never ask the browser to fake
+   others, and keep it on page titles only so section headings
+   don't compete with the prose. */
+h1, .display { font-family: var(--display); font-weight: 400; }
+h2, h3 { font-family: var(--font); font-weight: 600; letter-spacing: -0.005em; }
 
 * { box-sizing: border-box; }
 
@@ -55,7 +115,7 @@ body {
 }
 
 a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 /* ---------- Top bar ----------
    Markup comes from <site-header> (assets/js/site.js). Styling the
@@ -64,116 +124,163 @@ a:hover { text-decoration: underline; }
 site-header {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; gap: 14px;
-  min-height: 52px;
-  padding: 12px 22px;
-  background: rgba(25,25,25,.86);
-  backdrop-filter: blur(8px);
+  min-height: 46px;
+  padding: 11px 22px;
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
 }
 site-header .logo {
   display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--display); font-weight: 400; letter-spacing: .3px; color: var(--ink);
+  font-family: var(--display); font-weight: 400;
+  font-size: .86rem; letter-spacing: .04em;
+  color: var(--ink-soft);
 }
+site-header .logo:hover { color: var(--ink); text-decoration: none; }
 site-header .logo .mark {
-  width: 26px; height: 26px;
+  width: 20px; height: 20px;
   display: grid; place-items: center;
 }
-site-header .logo .mark img { width: 100%; height: 100%; object-fit: contain; }
-site-header .logo .mark svg { width: 22px; height: 22px; }
+site-header .logo .mark img { width: 100%; height: 100%; object-fit: contain; filter: var(--logo-filter); }
+site-header .logo .mark svg { width: 18px; height: 18px; }
 /* On lesson pages the whole title acts as a back link. */
-site-header .logo.back { color: var(--ink-soft); }
-site-header .logo.back:hover { color: var(--ink); text-decoration: none; }
 site-header .logo.back:hover .mark { transform: translateX(-3px); }
 site-header .logo.back .mark { transition: transform .15s ease; }
+
+/* Theme toggle — quiet, right-aligned, no border until hovered. */
+site-header .theme-toggle {
+  margin-left: auto;
+  background: none; border: 1px solid transparent;
+  color: var(--ink-faint);
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  cursor: pointer; padding: 0;
+}
+site-header .theme-toggle:hover { color: var(--ink); border-color: var(--line); }
+site-header .theme-toggle svg { width: 16px; height: 16px; display: block; }
+/* Show the icon for the theme you'd switch TO. */
+site-header .theme-toggle .i-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) site-header .theme-toggle .i-dark { display: block; }
+  :root:not([data-theme="light"]) site-header .theme-toggle .i-light { display: none; }
+}
+:root[data-theme="dark"] site-header .theme-toggle .i-dark { display: block; }
+:root[data-theme="dark"] site-header .theme-toggle .i-light { display: none; }
+:root[data-theme="light"] site-header .theme-toggle .i-dark { display: none; }
+:root[data-theme="light"] site-header .theme-toggle .i-light { display: block; }
 
 /* ---------- Layout ---------- */
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 22px; }
 main.wrap { padding-bottom: 90px; }
 
 /* ---------- Hero (hub) ---------- */
-.hero { padding: 54px 0 0; }
-.hero h1 { font-size: 2.4rem; line-height: 1.1; margin: 0 0 14px; }
-.hero p { color: var(--ink-soft); font-size: 1.12rem; max-width: 680px; margin: 0; }
+.hero { padding: 52px 0 0; }
+.hero h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 14px; max-width: 20ch; }
+.hero p { color: var(--ink-soft); font-size: 1.02rem; max-width: 62ch; margin: 0; }
 
 .hero-banner {
-  border: 1px solid var(--line); border-radius: var(--radius);
-  overflow: hidden; margin-bottom: 26px; background: var(--panel);
+  border: 1px solid var(--line);
+  overflow: hidden; margin-bottom: 30px;
 }
 .hero-banner img {
   display: block; width: 100%; aspect-ratio: 800 / 319;
   object-fit: cover; object-position: center 60%;
+  filter: var(--img-filter);
 }
 @media (max-width: 620px) {
   .hero-banner img { aspect-ratio: 16 / 9; }
 }
 
-
-/* ---------- Overall progress ---------- */
+/* ---------- Overall progress: a measurement, not a panel ---------- */
 .course-progress {
-  margin: 26px 0 8px; padding: 16px 18px;
-  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
-  display: flex; align-items: center; gap: 16px;
+  margin: 32px 0 0; padding: 12px 0 0;
+  border-top: 1px solid var(--line);
+  display: flex; align-items: center; gap: 14px;
 }
-.course-progress .bar { flex: 1; height: 10px; background: var(--panel-2); border-radius: 99px; overflow: hidden; }
-.course-progress .bar > i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--brand), var(--brand-soft)); transition: width .4s ease; }
-.course-progress .label { font-size: .92rem; color: var(--ink-soft); white-space: nowrap; }
-.btn-reset { background: none; border: 1px solid var(--line); color: var(--ink-faint); border-radius: 8px; padding: 6px 10px; font-size: .8rem; cursor: pointer; }
-.btn-reset:hover { color: var(--ink); border-color: var(--ink-faint); }
+.course-progress .bar { flex: 1; height: 2px; background: var(--line); overflow: hidden; }
+.course-progress .bar > i { display: block; height: 100%; width: 0; background: var(--brand); transition: width .4s ease; }
+.course-progress .label {
+  font-size: .82rem; color: var(--ink-faint);
+  white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.btn-reset {
+  background: none; border: none; padding: 0;
+  color: var(--ink-faint); font-size: .78rem; font-family: var(--font); cursor: pointer;
+}
+.btn-reset:hover { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 2px; }
 
-/* ---------- Modules & lesson cards ---------- */
-.module:not(.pill) { margin: 40px 0 8px; } /* :not(.pill) so this never hits a pill-shaped .module */
+/* ---------- Modules ---------- */
+.module:not(.pill) { margin: 44px 0 0; } /* :not(.pill) so this never hits a pill-shaped .module */
 .module > h2 {
-  font-size: 1.05rem; text-transform: uppercase; letter-spacing: .06em;
-  color: var(--ink-faint); border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 6px;
+  font-size: .74rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--ink-faint);
+  margin: 0 0 3px;
 }
-.module > .module-sub { color: var(--ink-faint); font-size: .95rem; margin: 0 0 14px; }
+.module > .module-sub { color: var(--ink-faint); font-size: .9rem; margin: 0 0 12px; max-width: 58ch; }
 
-.lessons-list { list-style: none; margin: 0; padding: 0; }
-.lessons-list li { margin: 8px 0; }
+/* ---------- Lessons: a plain ruled list, no cards ---------- */
+.lessons-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.lessons-list li { margin: 0; }
 .lesson-card {
-  display: flex; align-items: center; gap: 16px;
-  padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px;
-  background: var(--panel); transition: border-color .15s, transform .05s;
+  display: flex; align-items: baseline; gap: 14px;
+  padding: 11px 12px 11px 2px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  transition: background .12s, padding-left .12s;
 }
-.lesson-card:hover { border-color: var(--brand); text-decoration: none; transform: translateY(-1px); }
+.lesson-card:hover { background: var(--bg-soft); text-decoration: none; padding-left: 10px; }
+/* The one orange marker: slides in on the row you're pointing at. */
+.lesson-card:hover::before {
+  content: "";
+  position: absolute; left: 0; top: 0; bottom: -1px; width: 2px;
+  background: var(--brand);
+}
+.lesson-card:hover .meta .t { color: var(--ink-str); }
 .lesson-card .num {
-  flex: none; width: 38px; height: 38px; border-radius: 9px;
-  background: var(--panel-2); color: var(--ink-soft);
-  display: grid; place-items: center; font-weight: 700; font-variant-numeric: tabular-nums;
+  flex: none; width: 26px;
+  color: var(--ink-faint); font-size: .84rem;
+  font-variant-numeric: tabular-nums; text-align: right;
 }
 .lesson-card .meta { flex: 1; min-width: 0; }
-.lesson-card .meta .t { color: var(--ink); font-weight: 500; margin-right: 10px; }
-.lesson-card .meta .d { color: var(--ink-faint); font-size: .9rem; }
+.lesson-card .meta .t { display: block; color: var(--ink); font-weight: 500; }
+.lesson-card .meta .d { display: block; color: var(--ink-faint); font-size: .86rem; max-width: 58ch; }
+/* Completion is a small mark in the margin, not a badge. */
 .lesson-card .tick {
-  flex: none; width: 24px; height: 24px; border-radius: 50%;
-  border: 2px solid var(--line); display: grid; place-items: center; color: transparent; font-size: 13px;
+  flex: none; align-self: center;
+  width: 7px; height: 7px;
+  border: 1px solid var(--line-hot);
+  font-size: 0;
 }
-.lesson-card.done .num { background: rgba(54,211,153,.14); color: var(--good); }
-.lesson-card.done .tick { border-color: var(--good); background: var(--good); color: #08231a; }
+.lesson-card.done .meta .t { color: var(--ink-soft); }
+.lesson-card.done .tick { background: var(--good); border-color: var(--good); }
 
 /* ---------- Lesson header ---------- */
-.lesson-head { padding: 30px 0 10px; }
-.lesson-head h1 { font-size: 2rem; line-height: 1.15; margin: 6px 0 6px; }
+.lesson-head { padding: 44px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.lesson-head h1 { font-size: 1.85rem; line-height: 1.15; margin: 6px 0; }
 
 /* ---------- Content typography ---------- */
-.content h2 { font-size: 1.4rem; margin: 38px 0 10px; }
-.content h3 { font-size: 1.12rem; margin: 26px 0 8px; color: var(--ink); }
+.content h2 { font-size: 1.15rem; margin: 40px 0 8px; color: var(--ink); }
+.content h3 { font-size: 1.02rem; margin: 26px 0 6px; color: var(--ink-soft); }
 .content p { margin: 12px 0; }
 .content ul, .content ol { margin: 12px 0; padding-left: 24px; }
 .content li { margin: 6px 0; }
-.content strong { color: #fff; }
-.content code.inline {
-  font-family: var(--mono); font-size: .88em;
-  background: var(--panel-2); padding: 2px 6px; border-radius: 6px; color: #ffd9c7;
+.content strong { color: var(--ink-str); }
+.content code.inline, .content .inline {
+  font-family: var(--mono); font-size: .87em;
+  background: var(--panel-2); padding: 1px 5px; color: var(--brand-soft);
   word-break: break-word;
 }
 /* Inline keycaps, UI labels and doc links inside lesson bodies. */
-.pill { display: inline-flex; align-items: center; gap: 5px; font-size: .8rem; line-height: 1.4; padding: 4px 11px; border-radius: 99px; border: 1px solid var(--line); color: var(--ink-soft); background: var(--panel); }
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .82rem; line-height: 1.4; padding: 2px 7px;
+  color: var(--ink-soft); background: var(--panel-2);
+}
 
 /* Screenshots dropped into lesson bodies. */
 .content img {
   display: block; max-width: 100%; margin: 18px 0;
-  border: 1px solid var(--line); border-radius: 10px;
+  border: 1px solid var(--line);
 }
 
 /* Row of smaller side-by-side images, e.g. photo pairs. */
@@ -181,43 +288,59 @@ main.wrap { padding-bottom: 90px; }
 .img-row img { flex: 1 1 220px; max-width: 260px; margin: 0; }
 .img-row .video-embed {
   flex: 1 1 260px; max-width: 320px; aspect-ratio: 16 / 9;
-  border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--line); overflow: hidden;
 }
 .img-row .video-embed iframe { width: 100%; height: 100%; display: block; border: 0; }
 
-/* ---------- Callout boxes ---------- */
-.box { border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; padding: 14px 16px; margin: 20px 0; background: var(--panel); }
-.box .box-title { font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+/* ---------- Callouts: one left rule, no box ----------
+   The rule colour is the only thing separating a pitfall from a
+   goal, so it has to stay meaningful. */
+.box {
+  border-left: 2px solid var(--line-hot);
+  padding: 1px 0 1px 16px;
+  margin: 24px 0;
+}
+.box .box-title {
+  font-size: .7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--ink-faint);
+  margin-bottom: 3px;
+}
+.box p, .box li { font-size: .96rem; color: var(--ink-soft); }
+.box strong { color: var(--ink); }
 .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
-.box.concept  { border-left-color: var(--ink-faint); }
+.box.concept  { border-left-color: var(--line-hot); }
 .box.project  { border-left-color: var(--brand); }
 .box.simcheck { border-left-color: var(--good); }
 .box.pitfall  { border-left-color: var(--bad); }
-.box.task     { border-left-color: var(--warn); background: var(--panel-2); }
-.box.goal     { border-left-color: var(--brand); background: linear-gradient(180deg, rgba(243,89,36,.10), rgba(243,89,36,.03)); }
-.box.concept  .box-title::before { content: "💡"; }
-.box.project  .box-title::before { content: "🛠"; }
-.box.simcheck .box-title::before { content: "✅"; }
-.box.pitfall  .box-title::before { content: "⚠️"; }
-.box.task     .box-title::before { content: "🎯"; }
-.box.goal     .box-title::before { content: "🏁"; }
+.box.task     { border-left-color: var(--warn); }
+.box.goal     { border-left-color: var(--brand); }
+.box.project  .box-title, .box.goal .box-title { color: var(--brand-soft); }
+.box.simcheck .box-title { color: var(--good); }
+.box.pitfall  .box-title { color: var(--bad); }
+.box.task     .box-title { color: var(--warn); }
+.box.goal p { color: var(--ink); font-size: 1rem; }
 
 /* ---------- Code blocks ---------- */
-.codeblock { margin: 18px 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--code-bg); }
+.codeblock { margin: 18px 0; border: 1px solid var(--line); overflow: hidden; background: var(--code-bg); }
 .codeblock .cb-head {
   display: flex; align-items: center; gap: 8px;
-  padding: 7px 12px; background: #0f0f0f; border-bottom: 1px solid var(--line);
-  font-family: var(--mono); font-size: .78rem; color: var(--ink-faint);
+  padding: 6px 14px; border-bottom: 1px solid var(--line);
+  font-family: var(--mono); font-size: .74rem; color: var(--ink-faint);
 }
-.codeblock .cb-head .dot { width: 10px; height: 10px; border-radius: 50%; background: #3a3a3a; }
-.codeblock .cb-head .fname { color: var(--ink-soft); }
+.codeblock .cb-head .fname { color: var(--ink-faint); }
 .codeblock .cb-head .spacer { flex: 1; }
-.codeblock .cb-head .badge { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; padding: 2px 7px; border-radius: 5px; }
-.codeblock .cb-head .badge.type { background: rgba(243,89,36,.16); color: var(--brand-soft); }
-.codeblock .cb-head .copy-btn { background: none; border: 1px solid var(--line); color: var(--ink-faint); border-radius: 6px; padding: 2px 9px; font-size: .72rem; cursor: pointer; }
+.codeblock .cb-head .badge {
+  font-size: .62rem; text-transform: uppercase; letter-spacing: .08em; padding: 2px 7px;
+}
+.codeblock .cb-head .badge.type { border: 1px solid var(--line-hot); color: var(--ink-faint); }
+.codeblock .cb-head .copy-btn {
+  background: none; border: 1px solid var(--line-hot); color: var(--ink-faint);
+  padding: 2px 9px; font-size: .72rem; cursor: pointer;
+}
 .codeblock .cb-head .copy-btn:hover { color: var(--ink); border-color: var(--ink-faint); }
-.codeblock pre { margin: 0; padding: 14px 16px; overflow-x: auto; font-family: var(--mono); font-size: 14.5px; line-height: 1.6; }
-.codeblock code { font-family: var(--mono); white-space: pre; }
+.codeblock pre { margin: 0; padding: 14px; overflow-x: auto; font-family: var(--mono); font-size: 14.5px; line-height: 1.6; }
+.codeblock code { font-family: var(--mono); white-space: pre; color: var(--ink); }
 
 /* Non-copyable instructional code: students must type it out */
 .codeblock.type pre, .codeblock.type code {
@@ -227,92 +350,123 @@ main.wrap { padding-bottom: 90px; }
 .codeblock.type { position: relative; }
 .codeblock.type::after {
   content: "type it out — copying is disabled"; position: absolute; right: 10px; bottom: 8px;
-  font-size: .66rem; color: var(--ink-faint); background: rgba(15,15,15,.7); padding: 2px 7px; border-radius: 5px;
-  pointer-events: none; opacity: .0; transition: opacity .2s;
+  font-size: .66rem; color: var(--ink-faint); background: var(--code-bg); padding: 2px 7px;
+  pointer-events: none; opacity: 0; transition: opacity .2s;
 }
-.codeblock.type:hover::after { opacity: .85; }
+.codeblock.type:hover::after { opacity: .9; }
 
 /* Syntax tokens */
-.tok-com { color: #6f6f6f; font-style: italic; }
-.tok-pre { color: #c792ea; }
-.tok-str { color: #c3e88d; }
-.tok-num { color: #f78c6c; }
-.tok-kw  { color: #82aaff; }
-.tok-typ { color: #ffcb6b; }
-.tok-fn  { color: #82d9ff; }
-.tok-op  { color: #89ddff; }
+.tok-com { color: var(--tok-com); font-style: italic; }
+.tok-pre { color: var(--tok-pre); }
+.tok-str { color: var(--tok-str); }
+.tok-num { color: var(--tok-num); }
+.tok-kw  { color: var(--tok-kw); }
+.tok-typ { color: var(--tok-typ); }
+.tok-fn  { color: var(--tok-fn); }
+.tok-op  { color: var(--tok-op); }
 
-/* ---------- Quiz ---------- */
-.quiz { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin: 22px 0; background: var(--panel); }
+/* ---------- Quiz: separated by rules, not enclosed ---------- */
+.quiz {
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  padding: 16px 0; margin: 28px 0;
+}
 .quiz .q { font-weight: 500; margin-bottom: 12px; }
-.quiz .q .qmark { color: var(--brand-soft); margin-right: 6px; font-weight: 700; }
+.quiz .q .qmark { color: var(--ink-faint); margin-right: 6px; }
 .quiz .options { display: grid; gap: 8px; }
 .quiz .opt {
   text-align: left; width: 100%; cursor: pointer;
-  background: var(--panel-2); border: 1px solid var(--line); color: var(--ink);
-  border-radius: 9px; padding: 11px 14px; font-size: .98rem; font-family: var(--font);
+  background: none; border: 1px solid var(--line); color: var(--ink);
+  padding: 10px 13px; font-size: .98rem; font-family: var(--font);
   transition: border-color .12s, background .12s;
 }
-.quiz .opt:hover:not(:disabled) { border-color: var(--ink-faint); }
+.quiz .opt:hover:not(:disabled) { border-color: var(--line-hot); background: var(--bg-soft); }
 .quiz .opt[disabled] { cursor: default; }
-.quiz .opt.correct { border-color: var(--good); background: rgba(54,211,153,.12); }
-.quiz .opt.wrong   { border-color: var(--bad); background: rgba(248,114,114,.10); }
+.quiz .opt.correct { border-color: var(--good); }
+.quiz .opt.wrong   { border-color: var(--bad); }
 .quiz .opt .marker { float: right; font-weight: 700; }
 .quiz .opt.correct .marker::after { content: "✔"; color: var(--good); }
 .quiz .opt.wrong .marker::after   { content: "✗"; color: var(--bad); }
-.quiz .explain { margin-top: 12px; padding: 11px 14px; border-radius: 9px; font-size: .94rem; display: none; }
+.quiz .explain { margin-top: 12px; padding: 2px 0 2px 12px; font-size: .94rem; display: none; }
 .quiz .explain.show { display: block; }
-.quiz .explain.ok  { background: rgba(54,211,153,.10); border: 1px solid rgba(54,211,153,.4); }
-.quiz .explain.no  { background: rgba(251,189,35,.08); border: 1px solid rgba(251,189,35,.35); }
+.quiz .explain.ok  { border-left: 2px solid var(--good); }
+.quiz .explain.no  { border-left: 2px solid var(--warn); }
 
 /* ---------- Fill in the blank ---------- */
-.fill { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; margin: 22px 0; background: var(--panel); }
+.fill {
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  padding: 16px 0; margin: 28px 0;
+}
 .fill .q { font-weight: 500; margin-bottom: 10px; }
-.fill .q .qmark { color: var(--brand-soft); margin-right: 6px; font-weight: 700; }
-.fill .prompt-code { font-family: var(--mono); font-size: 14px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 8px 0; white-space: pre-wrap; color: var(--ink-soft); }
+.fill .q .qmark { color: var(--ink-faint); margin-right: 6px; }
+.fill .prompt-code {
+  font-family: var(--mono); font-size: 14px;
+  background: var(--code-bg); border: 1px solid var(--line);
+  padding: 10px 12px; margin: 8px 0; white-space: pre-wrap; color: var(--ink-soft);
+}
 .fill .row { display: flex; gap: 8px; flex-wrap: wrap; }
 .fill input[type=text] {
   flex: 1; min-width: 220px; font-family: var(--mono); font-size: 14.5px;
-  background: var(--code-bg); border: 1px solid var(--line); color: var(--ink);
-  border-radius: 8px; padding: 10px 12px;
+  background: var(--code-bg); border: 1px solid var(--line-hot); color: var(--ink);
+  padding: 10px 12px;
 }
 .fill input.ok { border-color: var(--good); }
 .fill input.no { border-color: var(--bad); }
-.fill button.check { background: var(--brand); border: none; color: #1a0a02; font-weight: 700; border-radius: 8px; padding: 10px 16px; cursor: pointer; }
-.fill button.hintbtn { background: none; border: 1px solid var(--line); color: var(--ink-soft); border-radius: 8px; padding: 10px 14px; cursor: pointer; }
+.fill button.check {
+  background: var(--brand); border: none; color: var(--on-brand);
+  font-weight: 600; padding: 10px 16px; font-family: var(--font); cursor: pointer;
+}
+.fill button.hintbtn {
+  background: none; border: 1px solid var(--line-hot); color: var(--ink-soft);
+  padding: 10px 14px; font-family: var(--font); cursor: pointer;
+}
 .fill .feedback { margin-top: 10px; font-size: .92rem; display: none; }
 .fill .feedback.show { display: block; }
 .fill .feedback.ok { color: var(--good); }
 .fill .feedback.no { color: var(--warn); }
 
 /* ---------- Reveal (task solutions) ---------- */
-.reveal { border: 1px dashed var(--line); border-radius: 12px; margin: 20px 0; overflow: hidden; }
+.reveal {
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  margin: 24px 0;
+}
 .reveal > summary {
-  cursor: pointer; padding: 14px 16px; font-weight: 500; color: var(--ink-soft);
-  list-style: none; display: flex; align-items: center; gap: 10px; background: var(--panel);
+  cursor: pointer; padding: 13px 2px; font-weight: 500; color: var(--ink-soft);
+  list-style: none; display: flex; align-items: center; gap: 10px;
 }
 .reveal > summary::-webkit-details-marker { display: none; }
-.reveal > summary::before { content: "▸"; color: var(--brand-soft); transition: transform .15s; }
+.reveal > summary::before { content: "▸"; color: var(--ink-faint); transition: transform .15s; }
 .reveal[open] > summary::before { transform: rotate(90deg); }
 .reveal > summary .hint { color: var(--ink-faint); font-weight: 400; font-size: .86rem; }
-.reveal .reveal-body { padding: 4px 16px 14px; border-top: 1px solid var(--line); }
+.reveal .reveal-body { padding: 4px 2px 14px; border-top: 1px solid var(--line); }
 
 /* ---------- Checklist ---------- */
 .checklist { list-style: none; padding: 0; margin: 10px 0; }
 .checklist li { display: flex; gap: 10px; align-items: flex-start; margin: 7px 0; }
-.checklist li::before { content: "☐"; color: var(--ink-faint); font-size: 1.1em; line-height: 1.4; }
+.checklist li::before { content: "—"; color: var(--ink-faint); line-height: 1.5; }
 
 /* ---------- Complete + nav ---------- */
-.complete-bar { margin: 40px 0 10px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); text-align: center; }
-.btn-complete { background: var(--brand); border: none; color: #1a0a02; font-weight: 700; font-size: 1rem; border-radius: 10px; padding: 12px 22px; cursor: pointer; }
-.btn-complete.done { background: var(--good); color: #08231a; }
+.complete-bar { margin: 40px 0 10px; padding: 20px 0 0; border-top: 1px solid var(--line); }
+.btn-complete {
+  background: var(--brand); border: none; color: var(--on-brand);
+  font-weight: 700; font-size: .94rem; padding: 11px 20px;
+  font-family: var(--font); cursor: pointer;
+}
+.btn-complete.done { background: none; color: var(--good); border: 1px solid var(--good); }
 .btn-complete:hover { filter: brightness(1.05); }
 
-.lesson-nav { display: flex; justify-content: space-between; gap: 12px; margin: 26px 0 0; }
-.lesson-nav a { flex: 1; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--ink); }
-.lesson-nav a:hover { border-color: var(--brand); text-decoration: none; }
-.lesson-nav a.next { text-align: right; }
-.lesson-nav a .dir { display: block; font-size: .76rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .08em; }
+.lesson-nav { display: flex; justify-content: space-between; gap: 0; margin: 34px 0 0; }
+.lesson-nav a {
+  flex: 1; padding: 14px 12px 14px 0;
+  border-top: 1px solid var(--line); color: var(--ink);
+  transition: border-color .12s;
+}
+.lesson-nav a:hover { border-top-color: var(--brand); text-decoration: none; }
+.lesson-nav a:hover .ttl { color: var(--brand-soft); }
+.lesson-nav a.next { text-align: right; padding: 14px 0 14px 12px; }
+.lesson-nav a .dir {
+  display: block; font-size: .7rem; color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: .12em; margin-bottom: 2px;
+}
 .lesson-nav a .ttl { font-weight: 500; }
 .lesson-nav a.disabled { opacity: .35; pointer-events: none; }
 
@@ -322,6 +476,7 @@ main.wrap { padding-bottom: 90px; }
   .hero h1 { font-size: 1.9rem; }
   .lesson-head h1 { font-size: 1.6rem; }
   .lesson-nav { flex-direction: column; }
+  .lesson-nav a.next { text-align: left; padding: 14px 12px 14px 0; }
   .codeblock pre { font-size: 13px; }
 }
 
